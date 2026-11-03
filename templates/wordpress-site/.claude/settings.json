@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": ["website-spec", "wordpress"],
+  "permissions": {
+    "allow": ["mcp__website-spec__*"]
+  }
+}
