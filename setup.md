@@ -254,7 +254,7 @@ Skip this step if no agent was created. Each agent becomes its own T3 Code proje
 3. **If it fails with `capability_denied`:** only a thread in permission mode **Full access** (and **Build**, not Plan) may add projects. **ASK** the user to switch, in `LANGUAGE`, along these lines:
    > Click the model name under the message box. At the bottom of that menu, **Permissions** shows the current mode. Choose **Full access** (the shield with a line through it). If a button under the message box says **Plan**, click it so it says **Build**. Then send me "done".
 
-   The change applies from their next message. Then try A again. If the user doesn't want to switch, go to C.
+   Ask only this; don't offer the by-hand route in the same message. The change applies from their next message. Then try A again. If the user doesn't want to switch, go to C.
 
 **B. T3 command line** (only if A's tools don't exist, or A is still denied after the switch). Run `"$T3CODE_CLI_PATH" project add "<TARGET>" --title "<title>"` (PowerShell: `& $env:T3CODE_CLI_PATH project add "<TARGET>" --title "<title>"`). If `T3CODE_CLI_PATH` is empty, go to C. "Already exists" means the agent is already registered.
 
