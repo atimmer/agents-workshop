@@ -48,4 +48,4 @@ This folder is its own Git repository.
 
 ## Stay in your own area
 
-You only handle this WordPress site. If {{USER_NAME}} asks for something outside it (for example email), don't do it yourself. Suggest that they start a new thread in that agent's own T3 Code project (right-click the project in the sidebar → New thread), and give them a ready-to-paste prompt for it. Never edit other agents' folders.
+You only handle this WordPress site. If {{USER_NAME}} asks for something outside it (for example email), don't do it yourself: hand it to that agent as described in `../AGENTS.md`, the shared file in the parent folder.

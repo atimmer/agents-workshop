@@ -78,7 +78,7 @@ The printed path is `WORKSHOP_DIR` (Git Bash on Windows: `cygpath -w` gives its 
 - macOS/Linux/Git Bash: `mkdir -p "<USER_HOME>/agents"`
 - PowerShell: `New-Item -ItemType Directory -Force "<USER_HOME>\agents" | Out-Null`
 
-The folder only holds one subfolder per agent. Don't put files in it, and don't make it a Git repository.
+Don't make it a Git repository. Besides one subfolder per agent, it holds one shared file, `AGENTS_DIR/AGENTS.md`, which tells every agent how to reach the others through T3 Code. If it doesn't exist yet, copy `<WORKSHOP_DIR>/templates/shared/AGENTS.md` there unchanged (UTF-8 without BOM). If it exists, leave it alone. This file isn't versioned, and Codex doesn't load files outside an agent's own Git repository, so each agent's own `AGENTS.md` points to it as `../AGENTS.md`. Don't add a shared `CLAUDE.md`.
 
 ## Step 3: Explain the idea
 
@@ -284,7 +284,7 @@ T3 Code usually shows a new icon within a minute or two. If not, it appears afte
 
 Check each item below and fix what you can. Then **show the user the checklist itself**, one line per item: ✅ when it's done and checked, ⚠️ when it's skipped, failed or not checked yet, each ⚠️ with a few words on why. Leave out items that don't apply.
 
-- `AGENTS_DIR` exists and contains one folder per chosen agent.
+- `AGENTS_DIR` exists, is not a Git repository, and contains the shared `AGENTS.md` plus one folder per chosen agent.
 - Each agent folder has `AGENTS.md`, `CLAUDE.md` (containing `@AGENTS.md`), and its memory files. No placeholders are left: search for `{{`.
 - Each agent folder is its own Git repository with at least one commit, and `git -C "<TARGET>" status --porcelain` is empty.
 - WordPress agent: `.mcp.json` and `.codex/config.toml` exist and are valid. With an inside connection: `git -C "<TARGET>" check-ignore .mcp.json .codex/config.toml` lists both, and the connection test in 4.5 passed.
