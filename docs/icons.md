@@ -2,7 +2,7 @@
 
 This guide is for step 6 of `setup.md`. Use it only if you have an image-generation tool.
 
-T3 Code looks for a project icon in the project folder. It tries, in order, `favicon.svg`, `favicon.ico`, `favicon.png`, `public/favicon.*`, and a few others. A plain `favicon.png` in the agent folder is enough. T3 caches the result: "no icon found" for about 1 minute, and a found icon for about 10 minutes. A new icon therefore shows up within a minute or two. A *replaced* icon can take up to 10 minutes, or appears after a restart of T3 Code.
+T3 Code looks for a project icon in the project folder. It tries, in order, `favicon.svg`, `favicon.ico`, `favicon.png`, `public/favicon.*`, and a few others. A plain `favicon.png` in the agent folder is enough. T3 caches the result: "no icon found" for about 1 minute, and a found icon for about 10 minutes. A new icon usually shows up within a minute or two; a *replaced* icon can take up to 10 minutes. If it doesn't appear, reload or restart T3 Code.
 
 ## 1. The five styles
 
@@ -17,7 +17,7 @@ Show these to the user, one line each, in their language:
 ## 2. Samples, choice, and the final icons
 
 1. Generate one sample per style for the first agent (five images). Use the prompt template below with that agent's object and color.
-2. Show the five samples and ask the user to pick a number.
+2. Show the five samples **in the chat**, in style order, each labelled with its number and style name, e.g. `![1 – Cut-paper](/Users/sam/…/sample-1.png)`. T3 Code shows a Markdown image with an absolute local path. On Windows, use forward slashes (`C:/Users/Sam/…`). Then ask the user to pick a number.
 3. In the chosen style, generate one icon per agent. Each agent gets its own color and an object that looks clearly different from the others.
 
 | Agent | Object | Accent color |
@@ -50,8 +50,10 @@ Exactly one icon. No text, letters, numbers, logos, watermark, frame, mockup, or
 
 ## Saving
 
-1. Save each final icon as `favicon.png` in the agent's folder. If a `favicon.png` already exists there, ask before replacing it.
-2. Resize to 256×256 if a tool for that is available. If not, keep the larger PNG; T3 scales it down.
+Keep each generated image at its own path (`<in.png>`), never at `favicon.png` itself, so resizing reads and writes different files.
+
+1. If a `favicon.png` already exists in the agent's folder, ask before replacing it.
+2. Resize to 256×256 into `<TARGET>/favicon.png`. If no resize tool works, copy the larger PNG there instead; T3 scales it down.
    - macOS: `sips -z 256 256 "<in.png>" --out "<TARGET>/favicon.png"`
    - Windows (PowerShell):
      ```powershell
@@ -59,11 +61,12 @@ Exactly one icon. No text, letters, numbers, logos, watermark, frame, mockup, or
      $src = [System.Drawing.Image]::FromFile("<in.png>")
      $dst = New-Object System.Drawing.Bitmap 256, 256
      $g = [System.Drawing.Graphics]::FromImage($dst)
-     $g.InterpolationMode = "HighQualityBicubic"
-     $g.DrawImage($src, 0, 0, 256, 256)
-     $dst.Save("<TARGET>\favicon.png", [System.Drawing.Imaging.ImageFormat]::Png)
-     $g.Dispose(); $dst.Dispose(); $src.Dispose()
+     try {
+       $g.InterpolationMode = "HighQualityBicubic"
+       $g.DrawImage($src, 0, 0, 256, 256)
+       $dst.Save("<TARGET>\favicon.png", [System.Drawing.Imaging.ImageFormat]::Png)
+     } finally { $g.Dispose(); $dst.Dispose(); $src.Dispose() }
      ```
    - Linux: `magick "<in.png>" -resize 256x256 "<TARGET>/favicon.png"` (or `convert` with ImageMagick 6)
-3. Commit in each agent repository: `git -C "<TARGET>" add favicon.png`, then `git -C "<TARGET>" commit -m "Add agent icon"`.
-4. Write the chosen style number and the prompt you used into the agent's memory file (`memory.md`), so that future agents can get a matching icon.
+3. Write the chosen style number and the prompt you used into the agent's `memory.md`, so that future agents can get a matching icon.
+4. Commit both: `git -C "<TARGET>" add -- favicon.png memory.md`, then `git -C "<TARGET>" commit -m "Add agent icon"`. If the agent has a private GitHub backup, `git -C "<TARGET>" push`.

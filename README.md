@@ -28,15 +28,16 @@ Je hoeft niet te kunnen programmeren. De agent doet het werk en vraagt je om toe
 3. **Start een nieuw gesprek.**
    - Zie je *What should we work on?*: klik op **Start without a project**.
    - Zie je die knop niet: klik op **Add project** → **Local folder** en kies je persoonlijke map (je thuismap).
-4. **Kies het model** onder het tekstvak: *Claude Opus 5.5* (Claude) of *GPT-6.1 Sol* (Codex), met *medium* redeneren.
-   - Tip: zet daar ook de toegang op **Full access**. Dan hoef je minder vaak op *Approve* te klikken. De agent vraagt je nog steeds eerst om toestemming voordat hij iets installeert.
+4. **Kies het model en de toegang.** Klik onder het tekstvak op de modelnaam en kies *Claude Opus 5.5* (Claude) of *GPT-6.1 Sol* (Codex), met *medium* redeneren.
+   - Onderaan dat menu staat **Permissions**. Dat moet op **Full access** staan (het schildje met een streep erdoor); dat is de standaard. Staat er *Supervised*, *Auto-accept edits* of *Auto*? Klik erop en kies **Full access**. Alleen dan kan de agent je agents als project aan T3 Code toevoegen. Hij vraagt je nog steeds eerst om toestemming voordat hij iets installeert.
+   - Staat er onder het tekstvak een knop **Plan**? Klik erop, zodat er **Build** staat.
 5. **Plak dit bericht** en druk op Enter:
 
    ```text
    Voer de stappen uit in https://github.com/atimmer/agents-workshop/blob/main/setup.md
    ```
 
-6. **Beantwoord de vragen van de agent.** De agent vraagt steeds één ding tegelijk. Vraagt hij toestemming om iets uit te voeren? Lees kort wat het is en klik op **Approve**.
+6. **Beantwoord de vragen van de agent.** De agent vraagt steeds één ding tegelijk. Vraagt hij toestemming om iets uit te voeren? Lees kort wat het is en klik op **Approve**. Vraagt hij je de toegang op Full access te zetten? Doe dat zoals bij stap 4 en stuur dan *klaar*.
 
 Gaat er iets mis, of heb je T3 Code opnieuw opgestart? Start een nieuw gesprek en plak hetzelfde bericht nog een keer. De agent slaat over wat al klaar is.
 

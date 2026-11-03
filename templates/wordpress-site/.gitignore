@@ -1,6 +1,2 @@
-# These can contain your WordPress application password. Keep them on this computer only.
-.mcp.json
-.codex/config.toml
-
 .DS_Store
 Thumbs.db

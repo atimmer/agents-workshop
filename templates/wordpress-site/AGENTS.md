@@ -25,26 +25,13 @@ At the start of a new conversation, check which of these tools you actually have
 
 ### Connecting or repairing the WordPress tools
 
-The connection lives in `.mcp.json` (Claude Code) and `.codex/config.toml` (Codex). Both are git-ignored, because they contain an application password. The steps below match step 4.5 of https://github.com/atimmer/agents-workshop/blob/main/setup.md.
+The connection lives in `.mcp.json` (Claude Code) and `.codex/config.toml` (Codex). Follow the "inside view" steps in step 4.5 of https://github.com/atimmer/agents-workshop/blob/main/setup.md, with this folder as `TARGET` and `{{SITE_URL}}` as `SITE_URL`. In short:
 
 1. Requirements: WordPress 6.9 or newer, HTTPS, administrator rights. Install and activate the plugins **MCP Adapter** and **Enable Abilities for MCP**. Under Settings → WP Abilities, enable only the Read abilities.
 2. Create an application password under Users → Profile → Application Passwords.
-3. Set `AUTH` = base64 of `username:application-password`.
-4. Add the server to `.mcp.json` under `mcpServers`:
-
-   ```json
-   "wordpress": { "type": "http", "url": "{{SITE_URL}}/wp-json/mcp/mcp-adapter-default-server", "headers": { "Authorization": "Basic <AUTH>" } }
-   ```
-
-5. Add it to `.codex/config.toml` as well:
-
-   ```toml
-   [mcp_servers.wordpress]
-   url = "{{SITE_URL}}/wp-json/mcp/mcp-adapter-default-server"
-   http_headers = { Authorization = "Basic <AUTH>" }
-   ```
-
-6. New tools only appear in a **new** thread.
+3. **Before any password goes into a file:** make sure `.mcp.json` and `.codex/config.toml` are in `.gitignore` and no longer tracked by Git (`git rm --cached`), and commit that.
+4. Add a `wordpress` server to both files with `__WORDPRESS_AUTH__` as a placeholder. Get the password with the T3 tool `request_secret` (`delivery: "file"`), so it never appears in the chat. Then replace the placeholder with base64 of `username:application-password` without printing it, and test the connection.
+5. New tools only appear in a **new** thread.
 
 ## Memory
 
