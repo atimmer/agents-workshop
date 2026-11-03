@@ -275,7 +275,7 @@ If you do, follow `<WORKSHOP_DIR>/docs/icons.md`. In short:
 2. Show all five in the chat, each as an image labelled with its number and style name, so the user can see them: `![1 – Cut-paper](<absolute path to the PNG>)`. On Windows, use forward slashes in the path (`C:/Users/Sam/…`).
 3. **ASK** which style (1–5) the user wants.
 4. Generate one icon per agent in that style, each with its own color and object.
-5. Save each as `favicon.png` in the agent folder (see icons.md). If a `favicon.png` already exists, **ASK** before replacing it.
+5. Save each as `favicon.png` in the agent folder (see icons.md). If a `favicon.png` already exists, **ASK** before replacing it. Show each final icon in the chat the same way as the samples.
 6. Add the style and prompt to the agent's `memory.md`, commit `favicon.png` and `memory.md`, and push if the agent has a private GitHub backup.
 
 T3 Code usually shows a new icon within a minute or two. If not, it appears after reloading or restarting T3 Code.
