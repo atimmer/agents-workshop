@@ -178,9 +178,9 @@ New tools only load when a new thread starts. So this setup thread won't see the
 
 **WordPress site agent, inside view** (only if the user said yes in 4.1). Walk the user through it one action at a time, and wait after each one:
 
-1. The user checks their WordPress version: **Dashboard → Updates**. It must be 6.9 or newer. The site must use `https://`.
+1. The user checks their WordPress version: **Dashboard → Updates**. It must be 6.9 or newer. The site must use `https://`. On WordPress.com, the site needs a paid plan, because the free plan can't install plugins.
 2. **Plugins → Add New Plugin**: search for and install + activate **MCP Adapter** (by WordPress.org), then **Enable Abilities for MCP**.
-3. **Settings → WP Abilities**: enable only the **Read** abilities. Explain that this way the agent can read but not change anything.
+3. **Settings → WP Abilities**: the plugin turns most abilities **on** when it's activated, including ones that change the site. Switch off everything except the **Read** abilities, and save. Explain that this way the agent can read but not change anything.
 4. **Users → Profile → Application Passwords**: name it `AI agent` → **Add Application Password** → copy the password shown. Explain that they can revoke it in the same place at any time.
 5. **ASK** for their WordPress username. Set `WP_USER`.
 6. **Keep the password out of Git.** In `TARGET`, add the lines `.mcp.json` and `.codex/config.toml` to `.gitignore` if they aren't there yet. Then run `git -C "<TARGET>" rm --cached -q --ignore-unmatch -- .mcp.json .codex/config.toml`, `git -C "<TARGET>" add -- .gitignore` and `git -C "<TARGET>" commit -m "Keep connection files local"`. The files stay on disk. Check: `git -C "<TARGET>" ls-files -- .mcp.json .codex/config.toml` must print nothing, and `git -C "<TARGET>" check-ignore .mcp.json .codex/config.toml` must print both. If not, stop here.
@@ -218,7 +218,7 @@ New tools only load when a new thread starts. So this setup thread won't see the
    If it fails, check the response:
    - `401`: wrong username or password.
    - `404` / `rest_no_route`: the MCP Adapter plugin isn't active.
-   - An HTML page or `403`: a security plugin or the host is blocking `/wp-json/`.
+   - An HTML page or `403`: a security plugin or the host is blocking `/wp-json/`. On Hostinger this is often the CDN: lower its security level in hPanel, or ask Hostinger support to allow `/wp-json/`.
 
    Explain the problem simply. The outside view still works without this. To retry with a new password, put `__WORDPRESS_AUTH__` back in both files first.
 
