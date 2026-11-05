@@ -2,6 +2,11 @@
 
 **You are an AI agent (Claude Code or Codex) running inside T3 Code. Follow these steps in order to set up personal AI agents on this computer for the user.** Each agent gets its own folder, instructions, memory and Git repository. The user is probably not a programmer.
 
+There are two parts:
+
+- **Part 1 (steps 0–4): prepare the computer.** Finish all of it before you mention any workflow.
+- **Part 2 (steps 5–11): workflows.** The user picks one workflow at a time, and each one becomes an agent. Afterwards they can pick another.
+
 ## Rules for you
 
 1. **One question per message.** At every **ASK** step, send exactly one question and wait for the answer. Never put a second question or request in the same message.
@@ -10,13 +15,15 @@
 4. **Ask before you install anything or change a global setting** (Git identity, Codex trusted folders).
 5. **Never delete or overwrite the user's files.** If a file you would create already exists, keep it. Every step is safe to run again: check what's already done and skip it.
 6. **Use the right commands for this computer.** Find out which OS and which shell you're in (step 1.1). Windows commands differ between PowerShell and Git Bash. Always use absolute paths. Shell variables don't survive between your commands, so write the actual paths into each command.
-7. **If a step fails twice,** stop, explain the problem simply, and offer to skip it. Skipped steps go in the final checklist.
+7. **If a step fails twice,** stop, explain the problem simply, and offer to skip it. Skipped steps go in the checklists.
 8. **"UNVERIFIED"** means it hasn't been tested on every setup. Try it, check the result, and use the fallback if it doesn't work.
-9. **Keep these values** as you go: `LANGUAGE`, `USER_NAME`, `USER_HOME`, `AGENTS_DIR`, `WORKSHOP_DIR`, the agents chosen and their answers, and `PROVIDER` (`claude` if you're Claude Code, `codex` if you're Codex).
+9. **Keep these values** as you go: `LANGUAGE`, `USER_NAME`, `USER_HOME`, `AGENTS_DIR`, `WORKSHOP_DIR`, `PROVIDER` (`claude` if you're Claude Code, `codex` if you're Codex), `CODEX_TRUST` and `GITHUB` (step 3), `ICON_STYLE` (step 10), and the agents created so far with their answers.
 
 Restart after an interruption: if the user starts again in a new thread, run from step 0. The checks make finished steps fast.
 
 ---
+
+# Part 1: Prepare the computer
 
 ## Step 0: Language and name
 
@@ -28,7 +35,7 @@ Set `LANGUAGE` to `Dutch` or `English`. **From now on, write every message in `L
 
 0.2 **ASK** for the user's first name. It goes into the agents' instructions. Set `USER_NAME`.
 
-0.3 In 2–3 sentences, tell the user what is about to happen: check a few programs, create an `agents` folder, set up one or two agents, add them to T3 Code, and maybe give them icons. Say it takes about 15–30 minutes and that you'll ask before installing anything.
+0.3 In 2–3 sentences, tell the user what is about to happen: first you prepare their computer (check a few programs and create an `agents` folder, about 10 minutes, and you'll ask before installing anything). Then they choose which workflow to build first, and you turn it into their first agent.
 
 ## Step 1: Prerequisites
 
@@ -80,59 +87,137 @@ The printed path is `WORKSHOP_DIR` (Git Bash on Windows: `cygpath -w` gives its 
 
 Don't make it a Git repository. Besides one subfolder per agent, it holds one shared file, `AGENTS_DIR/AGENTS.md`, which tells every agent how to reach the others through T3 Code. If it doesn't exist yet, copy `<WORKSHOP_DIR>/templates/shared/AGENTS.md` there unchanged (UTF-8 without BOM). If it exists, leave it alone. This file isn't versioned, and Codex doesn't load files outside an agent's own Git repository, so each agent's own `AGENTS.md` points to it as `../AGENTS.md`. Don't add a shared `CLAUDE.md`.
 
-## Step 3: Explain the idea
+## Step 3: Extras for later
 
-In `LANGUAGE`, in 2–4 sentences, in your own words:
+### 3.1 Codex: trusted folders
 
-> Each agent gets its own folder with its own instructions and memory. An AI can only keep a limited amount in mind at once. A bookkeeper doesn't need your budgeting rules, and an email assistant doesn't need to know your WordPress site. Several small, focused agents work better than one agent that has to know everything.
+Codex only reads an agent's own `.codex/config.toml` when that folder is marked as trusted. Do this if `PROVIDER` is `codex`, or if the user has said they'll also use Codex. Otherwise set `CODEX_TRUST` to `no` and skip it.
 
-## Step 4: Choose and create agents
+Explain this in one sentence and **ASK** whether you may mark each agent folder you create as trusted for Codex. Set `CODEX_TRUST` to `yes` or `no`. You apply it per agent in step 7.2.
 
-There are two example agents. Present them **one at a time**. After each one, **ASK** whether the user wants it.
+### 3.2 Optional: GitHub backup
 
-| Agent | Folder | T3 project title | Template |
-| --- | --- | --- | --- |
-| WordPress site agent | `wordpress-site` | `WordPress site` | `templates/wordpress-site/` |
-| Email assistant | `email-assistant` | `Email assistant` | `templates/email-assistant/` |
+**ASK** whether the user has a GitHub account, or wants one, to keep a private online backup of their agents. If not, set `GITHUB` to `no` and skip this step. Everything works without GitHub.
 
-### 4.1 WordPress site agent
+1. Check `gh --version`. If it's missing, **ASK**, then install it:
+   - Windows: `winget install --id GitHub.cli -e --source winget --accept-package-agreements --accept-source-agreements`. T3 Code then needs a restart, as in step 1.2.
+   - macOS: `brew install gh`. Without Homebrew, the user installs the `.pkg` from https://cli.github.com.
+   - Linux: follow https://github.com/cli/cli#installation. The user runs the `sudo` commands themselves.
+2. Login is interactive, so the user does it in their own terminal. Windows: Start → type `PowerShell` → open it. macOS: Cmd+Space → `Terminal`. Linux: their terminal app. They run `gh auth login`, choose **GitHub.com**, **HTTPS**, **Yes** (authenticate Git), and **Login with a web browser**. Then they type the code shown into the browser. Wait until they say it's done, then check with `gh auth status`.
 
-Explain it: this agent looks at the user's WordPress site in two ways.
+Set `GITHUB` to `yes` if `gh auth status` succeeds, otherwise `no`. Each agent gets its own private repository in step 8.
 
-- **From the outside** (works with just the URL): it checks the public site against *The Website Specification*, an open checklist for good websites covering SEO, accessibility, security, performance and more.
-- **From the inside** (optional): it answers questions about the site's content (posts, pages, categories) through two WordPress plugins. This needs administrator rights, WordPress 6.9 or newer, and permission to install plugins. A test or staging copy of the site is best.
+## Step 4: Computer ready
 
-If the user wants it:
+Check these and fix what you can:
 
-1. **ASK** for the site's URL. Set `SITE_URL`: add `https://` if it's missing, and remove any trailing `/` (`https://example.com/news/` → `https://example.com/news`).
-2. **ASK** whether they also want the inside connection now. Explain they can add it later by asking the agent. Remember the answer for 4.5.
+- Git works, and `user.name` and `user.email` are set.
+- `AGENTS_DIR` exists, is not a Git repository, and contains the shared `AGENTS.md`.
+- `WORKSHOP_DIR` contains `setup.md` and `templates/` (or you're reading the files from GitHub).
+- Codex users: `CODEX_TRUST` is set. GitHub, if chosen: `gh auth status` succeeds.
 
-### 4.2 Email assistant
+Show this as a short checklist (✅, or ⚠️ with a few words on why). Then, in `LANGUAGE`, in 2–4 sentences, explain the idea in your own words:
+
+> Each workflow gets its own agent: a folder with its own instructions and memory. An AI can only keep a limited amount in mind at once. A bookkeeper doesn't need your budgeting rules, and an email assistant doesn't need to know your WordPress site. Several small, focused agents work better than one agent that has to know everything.
+
+Put the checklist and the explanation in one message, and end that message with the question from step 5 (do the folder check from step 5 first).
+
+---
+
+# Part 2: Workflows
+
+## Step 5: Choose a workflow
+
+First list the folders in `AGENTS_DIR`, so you know which agents already exist (from an earlier run, or from an earlier round of this loop).
+
+**ASK** which workflow the user wants to work on first. Show all four options, numbered, with one line each. The first time, use this text (the Dutch one if `LANGUAGE` is Dutch):
+
+> **Your computer is ready. Which workflow do you want to work on first?**
+>
+> 1. **Email assistant**: helps you clear your inbox and drafts replies. Works best with Gmail or Google Workspace.
+> 2. **Your WordPress site, from the inside**: answers questions about your site's posts, pages and categories. You need administrator rights, WordPress 6.9 or newer, and permission to install two plugins. A staging copy of your site is best.
+> 3. **Your website, from the outside**: checks the public side of your site for SEO, accessibility, security and speed, against *The Website Specification*. You only need the URL.
+> 4. **Define your own workflow**: choose something that would improve your day-to-day the most.
+>
+> Answer with a number.
+
+> **Je computer is klaar. Aan welke workflow wil je als eerste werken?**
+>
+> 1. **E-mailassistent**: helpt je je inbox op te ruimen en stelt antwoorden voor. Werkt het best met Gmail of Google Workspace.
+> 2. **Je WordPress-site, van binnenuit**: beantwoordt vragen over de berichten, pagina's en categorieën van je site. Je hebt beheerdersrechten nodig, WordPress 6.9 of hoger, en je moet twee plugins kunnen installeren. Een testkopie van je site is het best.
+> 3. **Je website, van buitenaf**: controleert de publieke kant van je site op SEO, toegankelijkheid, veiligheid en snelheid, volgens *The Website Specification*. Je hebt alleen de URL nodig.
+> 4. **Zelf een workflow bedenken**: kies iets wat jouw dagelijkse werk het meest zou verbeteren.
+>
+> Antwoord met een nummer.
+
+In later rounds (from step 11), ask "Which workflow do you want to work on next?" instead, and mark the options that are already done with ✅. If agents already existed when you started, mention them in one sentence above the list and mark their options too. Option 4 can be chosen more than once.
+
+Workflows 2 and 3 share one agent, the **WordPress site agent**. It always gets the outside view; workflow 2 adds the inside view. If that agent already exists, workflow 2 only adds the inside connection to it.
+
+| Workflow | Agent | Folder | T3 project title | Template |
+| --- | --- | --- | --- | --- |
+| 1 | Email assistant | `email-assistant` | `Email assistant` | `templates/email-assistant/` |
+| 2, 3 | WordPress site agent | `wordpress-site` | `WordPress site` | `templates/wordpress-site/` |
+| 4 | The user's own agent | `<AGENT_FOLDER>` | `<AGENT_TITLE>` | `templates/custom-agent/` |
+
+Then go to the matching part of step 6.
+
+## Step 6: Questions for the workflow
+
+### 6.1 Email assistant
 
 Explain it: this agent helps triage and handle the user's email. It summarises, proposes what to do, and drafts replies. It never sends or deletes anything without the user's OK.
 
-If the user wants it, **ASK** which email they use. Reply honestly based on their answer:
+**ASK** which email they use. Reply honestly based on their answer:
 
 - **Gmail or Google Workspace** (their own domain on Google): ✅ supported. With Workspace, their admin may need to allow the app.
 - **Microsoft 365 work or school account**: ⚠️ possible, but an IT administrator usually has to approve the connection first. That probably can't happen during the workshop.
 - **Outlook.com / Hotmail / Live** (personal Microsoft): ❌ probably not supported. Claude's Microsoft 365 connector explicitly doesn't support personal accounts, and ChatGPT is untested.
 - **Mail from an internet provider or web host** (KPN, Ziggo, own domain over IMAP): ❌ no ready-made connection.
 
-If it's ❌ or ⚠️, **ASK** whether they want to skip this agent, use a Gmail account instead, or create it anyway. If they create it anyway, the agent can still help with emails they paste into the chat, and they can connect a mailbox later. Set `EMAIL_PROVIDER` to a short description, e.g. `Gmail`.
+If it's ❌ or ⚠️, **ASK** whether they want to pick another workflow, use a Gmail account instead, or create it anyway. If they pick another workflow, go back to step 5. If they create it anyway, the agent can still help with emails they paste into the chat, and they can connect a mailbox later. Set `EMAIL_PROVIDER` to a short description, e.g. `Gmail`.
 
-If the user wants neither agent, say that nothing will be created and go straight to step 7.
+### 6.2 WordPress site, from the inside
 
-### 4.3 Create each chosen agent folder
+Explain it: the agent answers questions about the site's content (posts, pages, categories) through two WordPress plugins, and also checks the public side of the site (workflow 3). Remind them it needs administrator rights, WordPress 6.9 or newer and permission to install plugins, and that a test or staging copy of the site is best.
 
-For each chosen agent, `TARGET` = `<AGENTS_DIR>/<folder>` and `TEMPLATE` = `<WORKSHOP_DIR>/templates/<folder>`.
+Set `INSIDE_VIEW` to `yes`. If the WordPress site agent already exists, take `SITE_URL` from its `memory.md`, say which site you'll connect, and go to step 7. (If the user names a different site, 7.1 handles it.) Otherwise **ASK** for the site's URL. Set `SITE_URL`: add `https://` if it's missing, and remove any trailing `/` (`https://example.com/news/` → `https://example.com/news`).
+
+### 6.3 Your website, from the outside
+
+Explain it: the agent checks the public site against *The Website Specification*, an open checklist for good websites covering SEO, accessibility, security, performance and more. It only needs the URL. This agent can later also look inside a WordPress site (workflow 2).
+
+Set `INSIDE_VIEW` to `no`. If the WordPress site agent already exists, say that this workflow is already part of it, and **ASK** whether they want to analyse another site with a separate agent, or pick another workflow (then go back to step 5). For a new or separate agent, **ASK** for the site's URL and set `SITE_URL` as in 6.2.
+
+### 6.4 Define your own workflow
+
+The user designs their own agent. Help them pick something small and concrete that they can try today.
+
+1. **ASK** what would improve their day-to-day the most: a task that recurs, takes time, or that they keep putting off. Give 3 short examples that fit a WordCamp crowd, for example: "turn a new blog post into social media posts", "prepare me for my client meetings", "keep a reading list and summarise what I save".
+2. If something important is unclear (what goes in, what should come out, how often), **ASK** one follow-up question. Ask at most two follow-ups in total.
+3. Propose the agent in one message:
+   - a short English title (`AGENT_TITLE`, e.g. `Social posts`) and a folder name (`AGENT_FOLDER`, lowercase with hyphens, e.g. `social-posts`);
+   - what it does, in 2–4 bullets;
+   - which tools it needs, honestly: what it can do with only web pages and files (`curl`, your web fetch tool), which ready-made connectors in the user's AI account could help (claude.ai → Settings → Connectors, or chatgpt.com → Settings → Apps, e.g. Google Calendar or Google Drive), and what isn't possible yet. Don't set up custom MCP servers or install software for it during the workshop. Without a tool, the agent works with what the user pastes in;
+   - a first prompt to try, in `LANGUAGE`.
+
+   **ASK** whether this is right or what to change. Adjust until they agree.
+4. Set `AGENT_PURPOSE` (one or two sentences), `AGENT_TASKS` (the bullets) and `AGENT_TOOLS` (the tool bullets, including what's missing). Write them in English.
+
+## Step 7: Create the agent
+
+`TARGET` = `<AGENTS_DIR>/<folder>` and `TEMPLATE` = `<WORKSHOP_DIR>/<template>` (from the table in step 5).
+
+### 7.1 Folder, files and Git
 
 1. **Check `TARGET` first:**
    - It doesn't exist: create it.
-   - It's an agent from an earlier run (its `AGENTS.md` starts with `# WordPress site agent` or `# Email assistant`): use it. WordPress only: if the URL in its `memory.md` differs from `SITE_URL`, **ASK** whether to keep the existing agent for the old site, or create a separate agent for the new site. For a separate agent, use folder `wordpress-site-2` and title `WordPress site 2` (or `-3`, …).
+   - It's an agent from an earlier run (its `AGENTS.md` starts with `# WordPress site agent`, `# Email assistant`, or `# <AGENT_TITLE>`): use it. WordPress only: if the URL in its `memory.md` differs from `SITE_URL`, **ASK** whether to keep the existing agent for the old site, or create a separate agent for the new site (unless the user already chose a separate agent in 6.3). For a separate agent, use folder `wordpress-site-2` and title `WordPress site 2` (or `-3`, …).
    - Anything else: leave it alone. Use `<folder>-2` (or `-3`, …) and title `<title> 2` instead, and tell the user.
 2. Copy these files from `TEMPLATE`. Hidden files (starting with `.`) are included, so don't skip them.
    - wordpress-site: `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`, `.mcp.json`, `.claude/settings.json`, `.codex/config.toml`
    - email-assistant: `AGENTS.md`, `CLAUDE.md`, `rules.md`, `memory.md`, `.gitignore`
+   - custom-agent: `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`
 
    For each file: **if it already exists in `TARGET`, keep it** (only fill in placeholders still left in it). Otherwise read the template file, replace the placeholders below, and write it to `TARGET` as UTF-8 without BOM. Keep `CLAUDE.md` exactly as it is: it contains `@AGENTS.md` and makes Claude Code read `AGENTS.md`, without needing symlinks, which don't work well on Windows.
 
@@ -142,6 +227,7 @@ For each chosen agent, `TARGET` = `<AGENTS_DIR>/<folder>` and `TEMPLATE` = `<WOR
    | `{{LANGUAGE}}` | `LANGUAGE` |
    | `{{SITE_URL}}` | `SITE_URL` (WordPress only) |
    | `{{EMAIL_PROVIDER}}` | `EMAIL_PROVIDER` (email only) |
+   | `{{AGENT_TITLE}}`, `{{AGENT_PURPOSE}}`, `{{AGENT_TASKS}}`, `{{AGENT_TOOLS}}` | from step 6.4 (own agent only) |
    | `{{DATE}}` | today, `YYYY-MM-DD` |
 
 3. If `TARGET/.git` doesn't exist, run `git -C "<TARGET>" init -b main`. Check for the `.git` folder itself: some home folders are inside a Git repository already.
@@ -149,34 +235,33 @@ For each chosen agent, `TARGET` = `<AGENTS_DIR>/<folder>` and `TEMPLATE` = `<WOR
 
 Each agent folder is its own Git repository. Use Git only, no other version control tools.
 
-### 4.4 Codex: trust the agent folders
+### 7.2 Codex: trust the folder
 
-Codex only reads an agent's own `.codex/config.toml` when that folder is marked as trusted. Do this if `PROVIDER` is `codex`, or if the user says they'll also use Codex. Otherwise skip it.
+Only if `CODEX_TRUST` is `yes`. The Codex config file is `<CODEX_HOME>/config.toml`. Use the `CODEX_HOME` environment variable if it's set, otherwise `<USER_HOME>/.codex`. Create the file if it doesn't exist.
 
-1. Explain this in one sentence and **ASK** whether you may mark the agent folders as trusted for Codex.
-2. The Codex config file is `<CODEX_HOME>/config.toml`. Use the `CODEX_HOME` environment variable if it's set, otherwise `<USER_HOME>/.codex`. Create the file if it doesn't exist.
-3. For each agent folder, look for a `[projects.…]` table for its exact absolute path (in single or double quotes).
-   - **Not there:** append this to the end, and change nothing else:
+Look for a `[projects.…]` table for the exact absolute `TARGET` path (in single or double quotes).
 
-     ```toml
+- **Not there:** append this to the end, and change nothing else:
 
-     [projects.'<absolute TARGET path>']
-     trust_level = "trusted"
-     ```
+  ```toml
 
-     Single quotes keep Windows backslashes as they are: `[projects.'C:\Users\Sam\agents\email-assistant']`. If the path itself contains a `'`, use double quotes and double every backslash: `[projects."C:\\Users\\O'Brien\\agents\\email-assistant"]`.
-   - **There with `trust_level = "trusted"`:** nothing to do.
-   - **There with another value:** change only that value to `"trusted"`.
+  [projects.'<absolute TARGET path>']
+  trust_level = "trusted"
+  ```
 
-UNVERIFIED on Windows: whether Codex matches this path form. The tool check at the end of step 7 shows it.
+  Single quotes keep Windows backslashes as they are: `[projects.'C:\Users\Sam\agents\email-assistant']`. If the path itself contains a `'`, use double quotes and double every backslash: `[projects."C:\\Users\\O'Brien\\agents\\email-assistant"]`.
+- **There with `trust_level = "trusted"`:** nothing to do.
+- **There with another value:** change only that value to `"trusted"`.
 
-### 4.5 Connect the tools
+UNVERIFIED on Windows: whether Codex matches this path form. The tool check in step 11 shows it.
 
-New tools only load when a new thread starts. So this setup thread won't see them; step 7 checks them in each agent's own thread.
+### 7.3 Connect the tools
+
+New tools only load when a new thread starts. So this setup thread won't see them; step 11 checks them in the agent's own thread.
 
 **WordPress site agent, outside view.** Nothing to do. The template's `.mcp.json` (Claude Code) and `.codex/config.toml` (Codex) already connect the free Website Specification server `https://mcp.specification.website/mcp`, which needs no login. These files hold no secrets and are committed to Git.
 
-**WordPress site agent, inside view** (only if the user said yes in 4.1). Walk the user through it one action at a time, and wait after each one:
+**WordPress site agent, inside view** (only if `INSIDE_VIEW` is `yes`). Walk the user through it one action at a time, and wait after each one:
 
 1. The user checks their WordPress version: **Dashboard → Updates**. It must be 6.9 or newer. The site must use `https://`. On WordPress.com, the site needs a paid plan, because the free plan can't install plugins.
 2. **Plugins → Add New Plugin**: search for and install + activate **MCP Adapter** (by WordPress.org), then **Enable Abilities for MCP**.
@@ -227,25 +312,22 @@ New tools only load when a new thread starts. So this setup thread won't see the
 - `PROVIDER` = `claude`: the user opens https://claude.ai/customize/connectors (on claude.ai: **Settings → Connectors**), clicks **Gmail** (or **Microsoft 365**), then **Connect**, logs in and allows access. Google Calendar is a useful extra. Claude Code gets the claude.ai connectors of the logged-in Claude account. UNVERIFIED: whether Gmail shows up inside T3 Code.
 - `PROVIDER` = `codex`: the user opens https://chatgpt.com → **Settings → Apps** → **Gmail** (or **Outlook**) → **Connect**. UNVERIFIED: whether ChatGPT apps show up in Codex inside T3 Code.
 
-Then **ASK** whether connecting worked, or whether they'd rather do it later. Wait for the answer before you go on. Either way, step 7 checks it in the agent's own thread. Without email tools, the agent helps with pasted emails instead.
+Then **ASK** whether connecting worked, or whether they'd rather do it later. Wait for the answer before you go on. Either way, step 11 checks it in the agent's own thread. Without email tools, the agent helps with pasted emails instead.
 
-### 4.6 Optional: GitHub backup
+**Your own agent.** Only the ready-made connectors from step 6.4, if any. Walk the user through connecting each one in the browser, the same way as for email (claude.ai → **Settings → Connectors**, or chatgpt.com → **Settings → Apps**), and **ASK** whether it worked or whether they'd rather do it later. If no connector is needed, there's nothing to do.
 
-**ASK** whether the user has a GitHub account, or wants one, to keep a private online backup of their agents. If not, skip this step. Everything works without GitHub.
+## Step 8: GitHub backup
 
-1. Check `gh --version`. If it's missing, **ASK**, then install it:
-   - Windows: `winget install --id GitHub.cli -e --source winget --accept-package-agreements --accept-source-agreements`. T3 Code then needs a restart, as in step 1.2.
-   - macOS: `brew install gh`. Without Homebrew, the user installs the `.pkg` from https://cli.github.com.
-   - Linux: follow https://github.com/cli/cli#installation. The user runs the `sudo` commands themselves.
-2. Login is interactive, so the user does it in their own terminal. Windows: Start → type `PowerShell` → open it. macOS: Cmd+Space → `Terminal`. Linux: their terminal app. They run `gh auth login`, choose **GitHub.com**, **HTTPS**, **Yes** (authenticate Git), and **Login with a web browser**. Then they type the code shown into the browser. Wait until they say it's done, then check with `gh auth status`.
-3. For each agent, first check that no password is in its history: `git -C "<TARGET>" log -p -- .mcp.json .codex/config.toml` must not contain `Authorization`. If it does, don't push this agent, and tell the user to revoke that application password in WordPress.
-4. Then:
+Only if `GITHUB` is `yes`.
+
+1. First check that no password is in the agent's history: `git -C "<TARGET>" log -p -- .mcp.json .codex/config.toml` must not contain `Authorization`. If it does, don't push this agent, and tell the user to revoke that application password in WordPress.
+2. Then:
    - **No `origin` yet** (`git -C "<TARGET>" remote get-url origin` fails): run `gh repo create agents-<folder> --private --source "<TARGET>" --remote origin --push`. If that name is taken, **ASK** for another one.
    - **`origin` exists:** run `gh repo view <origin URL> --json nameWithOwner,visibility`. Push with `git -C "<TARGET>" push -u origin main` only if `visibility` is `PRIVATE`. Otherwise don't push, and tell the user which repository it points to.
 
-## Step 5: Add each agent to T3 Code
+## Step 9: Add the agent to T3 Code
 
-Skip this step if no agent was created. Each agent becomes its own T3 Code project, with the title from the table and the agent folder as its workspace.
+Each agent becomes its own T3 Code project, with the title from the table in step 5 and the agent folder as its workspace.
 
 **A. T3 tools.** T3 Code gives you MCP tools from a server called `t3-code`: `t3_project_list`, `t3_project_create`, and `t3_project_update`. They're often *deferred*: load them with your tool search (Claude Code: ToolSearch with `select:mcp__t3-code__t3_project_list,mcp__t3-code__t3_project_create,mcp__t3-code__t3_project_update`; Codex: search tools for `t3_project`). Then:
 
@@ -258,49 +340,54 @@ Skip this step if no agent was created. Each agent becomes its own T3 Code proje
 
 **B. T3 command line** (only if A's tools don't exist, or A is still denied after the switch). Run `"$T3CODE_CLI_PATH" project add "<TARGET>" --title "<title>"` (PowerShell: `& $env:T3CODE_CLI_PATH project add "<TARGET>" --title "<title>"`). If `T3CODE_CLI_PATH` is empty, go to C. "Already exists" means the agent is already registered.
 
-**C. By hand.** Give the user these steps, with the exact folder path and title for each agent:
+**C. By hand.** Give the user these steps, with the exact folder path and title:
 
 1. In T3 Code's left sidebar, click **Add project** (the + button at the top) → **Local folder** → choose `<TARGET>` → confirm.
 2. The project is named after the folder. To rename it: right-click the project in the sidebar → **Project settings** → set the title.
 
-Then **ASK** them to tell you when the projects are in the sidebar, or to say "later". Wait for the answer. If `t3_project_list` works, check that each `TARGET` is there before you call it done. Otherwise it's ⚠️ in step 7.
+Then **ASK** them to tell you when the project is in the sidebar, or to say "later". Wait for the answer. If `t3_project_list` works, check that `TARGET` is there before you call it done. Otherwise it's ⚠️ in step 11.
 
-## Step 6: Icons (only if you can generate images)
+## Step 10: Icon (only if you can generate images)
 
-Skip this step if no agent was created. Check honestly whether *you* have an image-generation tool right now. Codex usually has one built in. Claude Code usually doesn't. If you don't have one, say in one sentence that icons need image generation, which you don't have, and that they can add one later in a Codex thread. Then go to step 7.
+Check honestly whether *you* have an image-generation tool right now. Codex usually has one built in. Claude Code usually doesn't. If you don't have one, say in one sentence (only the first time) that icons need image generation, which you don't have, and that they can add one later in a Codex thread. Then go to step 11.
 
 If you do, follow `<WORKSHOP_DIR>/docs/icons.md`. In short:
 
-1. Generate one sample per style (five) for the first agent.
-2. Show all five in the chat, each as an image labelled with its number and style name, so the user can see them: `![1 – Cut-paper](<absolute path to the PNG>)`. On Windows, use forward slashes in the path (`C:/Users/Sam/…`).
-3. **ASK** which style (1–5) the user wants.
-4. Generate one icon per agent in that style, each with its own color and object.
-5. Save each as `favicon.png` in the agent folder (see icons.md). If a `favicon.png` already exists, **ASK** before replacing it. Show each final icon in the chat the same way as the samples.
-6. Add the style and prompt to the agent's `memory.md`, commit `favicon.png` and `memory.md`, and push if the agent has a private GitHub backup.
+1. **If `ICON_STYLE` isn't set yet** (this is the first agent with an icon):
+   1. Generate one sample per style (five) for this agent.
+   2. Show all five in the chat, each as an image labelled with its number and style name, so the user can see them: `![1 – Cut-paper](<absolute path to the PNG>)`. On Windows, use forward slashes in the path (`C:/Users/Sam/…`).
+   3. **ASK** which style (1–5) the user wants. Set `ICON_STYLE`.
+2. Generate this agent's icon in `ICON_STYLE`, with a color and object that differ from the user's other agents.
+3. Save it as `favicon.png` in the agent folder (see icons.md). If a `favicon.png` already exists, **ASK** before replacing it. Show the final icon in the chat the same way as the samples.
+4. Add the style and prompt to the agent's `memory.md`, commit `favicon.png` and `memory.md`, and push if the agent has a private GitHub backup.
 
 T3 Code usually shows a new icon within a minute or two. If not, it appears after reloading or restarting T3 Code.
 
-## Step 7: Check and wrap up
+## Step 11: Check, try it, and choose the next workflow
 
-Check each item below and fix what you can. Then **show the user the checklist itself**, one line per item: ✅ when it's done and checked, ⚠️ when it's skipped, failed or not checked yet, each ⚠️ with a few words on why. Leave out items that don't apply.
+Check each item below for this agent and fix what you can. Then **show the user the checklist itself**, one line per item: ✅ when it's done and checked, ⚠️ when it's skipped, failed or not checked yet, each ⚠️ with a few words on why. Leave out items that don't apply.
 
-- `AGENTS_DIR` exists, is not a Git repository, and contains the shared `AGENTS.md` plus one folder per chosen agent.
-- Each agent folder has `AGENTS.md`, `CLAUDE.md` (containing `@AGENTS.md`), and its memory files. No placeholders are left: search for `{{`.
-- Each agent folder is its own Git repository with at least one commit, and `git -C "<TARGET>" status --porcelain` is empty.
-- WordPress agent: `.mcp.json` and `.codex/config.toml` exist and are valid. With an inside connection: `git -C "<TARGET>" check-ignore .mcp.json .codex/config.toml` lists both, and the connection test in 4.5 passed.
-- Codex users: each agent path is in `<CODEX_HOME>/config.toml` with `trust_level = "trusted"`.
-- Email: whether the user connected their mailbox.
-- Each agent is a T3 project (checked with `t3_project_list`, or confirmed by the user).
-- Icons, if made: `favicon.png` in each agent folder, committed.
-- GitHub, if chosen: each agent has a private `origin`, and `git -C "<TARGET>" status -sb` doesn't show `ahead`.
+- The agent folder has `AGENTS.md`, `CLAUDE.md` (containing `@AGENTS.md`), and its memory files. No placeholders are left: search for `{{`.
+- The agent folder is its own Git repository with at least one commit, and `git -C "<TARGET>" status --porcelain` is empty.
+- WordPress agent: `.mcp.json` and `.codex/config.toml` exist and are valid. With an inside connection: `git -C "<TARGET>" check-ignore .mcp.json .codex/config.toml` lists both, and the connection test in 7.3 passed.
+- Codex users: the agent path is in `<CODEX_HOME>/config.toml` with `trust_level = "trusted"`.
+- Email, or your own agent with connectors: whether the user connected them.
+- The agent is a T3 project (checked with `t3_project_list`, or confirmed by the user).
+- Icon, if made: `favicon.png` in the agent folder, committed.
+- GitHub, if chosen: the agent has a private `origin`, and `git -C "<TARGET>" status -sb` doesn't show `ahead`.
 
-Then send a short closing message in `LANGUAGE` that covers:
+In the same message, in `LANGUAGE`:
 
-1. **How to use an agent:** in T3 Code's sidebar, right-click the agent's project → **New thread**, and type a question. Always start agent work in that agent's own project, not in this setup thread.
-2. A first prompt to try for each agent, in `LANGUAGE`:
-   - WordPress site agent: "Check first which tools you have. Then analyse the public side of my site against The Website Specification. Give me a top 5 of improvements, ranked by impact and effort, and explain them for someone who isn't a developer."
-   - WordPress, inside view: "Which 5 posts have I published most recently, and which categories do I use most?"
-   - Email assistant: "Check first whether you can reach my mailbox. Then look at my unread emails from the past 3 days and suggest what I should do with each one."
-3. Each agent remembers what they tell it about their preferences, and saves that in its own folder.
+1. **How to use the agent:** in T3 Code's sidebar, right-click the agent's project → **New thread**, and type a question. Always start agent work in that agent's own project, not in this setup thread.
+2. A first prompt to try:
+   - Workflow 1, email assistant: "Check first whether you can reach my mailbox. Then look at my unread emails from the past 3 days and suggest what I should do with each one."
+   - Workflow 2, WordPress inside view: "Which 5 posts have I published most recently, and which categories do I use most?"
+   - Workflow 3, WordPress outside view: "Check first which tools you have. Then analyse the public side of my site against The Website Specification. Give me a top 5 of improvements, ranked by impact and effort, and explain them for someone who isn't a developer."
+   - Workflow 4, your own agent: the first prompt from step 6.4.
+3. The agent remembers what they tell it about their preferences, and saves that in its own folder.
 
-Finally, **ASK** the user to try the first prompt now in each agent's own thread, and to come back and tell you whether the agent found its tools (Website Specification, WordPress, mailbox), or to say "later". If a tool is missing, help fix it: Codex needs the trusted folder (4.4), the mailbox is connected in the browser (4.5), and new tools only appear in a new thread.
+Then **ASK**: will they try the first prompt now (and come back to tell you whether the agent found its tools), set up another workflow, or stop here?
+
+- **Try it now:** wait until they come back. If a tool is missing, help fix it: Codex needs the trusted folder (7.2), the mailbox and other connectors are connected in the browser (7.3), and new tools only appear in a new thread. Then ask whether they want another workflow or to stop.
+- **Another workflow:** go back to step 5.
+- **Stop:** send a short closing message that lists their agents and reminds them they can come back to this thread any time to add another workflow.

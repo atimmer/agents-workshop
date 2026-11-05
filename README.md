@@ -2,10 +2,14 @@
 
 Workshop van Anton Timmermans op WordCamp Nederland 2026 (vrijdag 13 november).
 
-In deze workshop zet je je eigen AI-agents op je laptop op. Elke agent is een eigen map met eigen instructies en een eigen geheugen. Je kiest uit twee voorbeelden:
+In deze workshop zet je je eigen AI-agents op je laptop op. Elke agent is een eigen map met eigen instructies en een eigen geheugen. Eerst maakt de agent je laptop klaar. Daarna kies je aan welke workflow je als eerste werkt:
 
-- **WordPress-site-agent**: bekijkt je site van buitenaf (SEO, toegankelijkheid, veiligheid, snelheid, volgens [The Website Specification](https://specification.website)). Als je wilt, kijkt hij ook van binnenuit mee in je berichten en pagina's.
-- **E-mailassistent**: helpt je je inbox op te ruimen en stelt antwoorden voor. Werkt het best met Gmail of Google Workspace.
+1. **E-mailassistent**: helpt je je inbox op te ruimen en stelt antwoorden voor. Werkt het best met Gmail of Google Workspace.
+2. **Je WordPress-site, van binnenuit**: beantwoordt vragen over je berichten, pagina's en categorieën. Daarvoor installeer je twee plugins.
+3. **Je website, van buitenaf**: controleert je site op SEO, toegankelijkheid, veiligheid en snelheid, volgens [The Website Specification](https://specification.website). Je hebt alleen de URL nodig.
+4. **Zelf een workflow bedenken**: iets wat jouw dagelijkse werk het meest zou verbeteren.
+
+Workflow 2 en 3 delen één agent, de WordPress-site-agent. Als je klaar bent met een workflow, kun je meteen de volgende kiezen.
 
 Je hoeft niet te kunnen programmeren. De agent doet het werk en vraagt je om toestemming als dat nodig is.
 
@@ -48,7 +52,7 @@ Elke agent staat als eigen project in de zijbalk van T3 Code. Klik met de rechte
 ## Voor de nieuwsgierigen
 
 - [`setup.md`](setup.md): de stappen voor de agent (Engels)
-- [`templates/`](templates/): de startbestanden per agent
+- [`templates/`](templates/): de startbestanden per agent (ook een leeg sjabloon voor je eigen workflow)
 - [`docs/connectors.md`](docs/connectors.md): hoe de koppelingen werken, en wat nog niet getest is
 - [`docs/icons.md`](docs/icons.md): de stijlen voor agent-iconen
 

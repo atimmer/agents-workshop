@@ -27,7 +27,7 @@ At the start of a new conversation, check which of these tools you actually have
 
 ### Connecting or repairing the WordPress tools
 
-The connection lives in `.mcp.json` (Claude Code) and `.codex/config.toml` (Codex). Follow the "inside view" steps in step 4.5 of https://github.com/atimmer/agents-workshop/blob/main/setup.md, with this folder as `TARGET` and `{{SITE_URL}}` as `SITE_URL`. In short:
+The connection lives in `.mcp.json` (Claude Code) and `.codex/config.toml` (Codex). Follow the "inside view" steps in step 7.3 of https://github.com/atimmer/agents-workshop/blob/main/setup.md, with this folder as `TARGET` and `{{SITE_URL}}` as `SITE_URL`. In short:
 
 1. Requirements: WordPress 6.9 or newer, HTTPS, administrator rights. Install and activate the plugins **MCP Adapter** and **Enable Abilities for MCP**. Under Settings → WP Abilities, enable only the Read abilities.
 2. Create an application password under Users → Profile → Application Passwords.

@@ -1,6 +1,6 @@
 # Agent icons (for the setup agent)
 
-This guide is for step 6 of `setup.md`. Use it only if you have an image-generation tool.
+This guide is for step 10 of `setup.md`. Use it only if you have an image-generation tool.
 
 T3 Code looks for a project icon in the project folder. It tries, in order, `favicon.svg`, `favicon.ico`, `favicon.png`, `public/favicon.*`, and a few others. A plain `favicon.png` in the agent folder is enough. T3 caches the result: "no icon found" for about 1 minute, and a found icon for about 10 minutes. A new icon usually shows up within a minute or two; a *replaced* icon can take up to 10 minutes. If it doesn't appear, reload or restart T3 Code.
 
@@ -18,7 +18,7 @@ Show these to the user, one line each, in their language:
 
 1. Generate one sample per style for the first agent (five images). Use the prompt template below with that agent's object and color.
 2. Show the five samples **in the chat**, in style order, each labelled with its number and style name, e.g. `![1 – Cut-paper](/Users/sam/…/sample-1.png)`. T3 Code shows a Markdown image with an absolute local path. On Windows, use forward slashes (`C:/Users/Sam/…`). Then ask the user to pick a number.
-3. In the chosen style, generate one icon per agent. Each agent gets its own color and an object that looks clearly different from the others.
+3. In the chosen style, generate the icon for each agent as it's created (setup builds one workflow at a time). Each agent gets its own color and an object that looks clearly different from the others.
 
 | Agent | Object | Accent color |
 | --- | --- | --- |

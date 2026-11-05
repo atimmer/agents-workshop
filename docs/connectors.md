@@ -31,6 +31,6 @@ The **Enable Abilities for MCP** plugin has an OAuth server, but it was built fo
 
 ## Secrets
 
-`.mcp.json` and `.codex/config.toml` start without secrets and are committed, so a GitHub backup includes the Website Specification connection. Only when the user adds the WordPress inside view does setup (step 4.5) first add both files to `.gitignore` and stop tracking them (`git rm --cached`), and only then write the application password into them. Git history therefore only ever holds the secret-free versions. Before pushing, setup checks that history contains no `Authorization` header. Revoke the password any time in WordPress: Users → Profile → Application Passwords.
+`.mcp.json` and `.codex/config.toml` start without secrets and are committed, so a GitHub backup includes the Website Specification connection. Only when the user adds the WordPress inside view does setup (step 7.3) first add both files to `.gitignore` and stop tracking them (`git rm --cached`), and only then write the application password into them. Git history therefore only ever holds the secret-free versions. Before pushing, setup checks that history contains no `Authorization` header. Revoke the password any time in WordPress: Users → Profile → Application Passwords.
 
 Environment-variable references (Claude `${VAR}` in `.mcp.json`, Codex `env_http_headers`) would keep the files committable, but there's no simple per-folder way to set that variable for both agents inside T3 Code on all three OSes. That's why setup uses ignored files instead.
