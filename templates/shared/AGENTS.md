@@ -1,6 +1,6 @@
 # Agents
 
-This folder is the parent of several agents. Each subfolder is one agent, with its own instructions, memory and Git repository, and its own T3 Code project. This file is not versioned, so keep it short and don't store anything here that you'd want to keep.
+This folder is the parent of several agents. Each subfolder is one agent, with its own instructions, memory and Git repository, and its own T3 Code project. `README.md` in this folder explains why. This file is not versioned, so keep it short and don't store anything here that you'd want to keep.
 
 ## Working with another agent
 

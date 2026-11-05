@@ -85,7 +85,12 @@ The printed path is `WORKSHOP_DIR` (Git Bash on Windows: `cygpath -w` gives its 
 - macOS/Linux/Git Bash: `mkdir -p "<USER_HOME>/agents"`
 - PowerShell: `New-Item -ItemType Directory -Force "<USER_HOME>\agents" | Out-Null`
 
-Don't make it a Git repository. Besides one subfolder per agent, it holds one shared file, `AGENTS_DIR/AGENTS.md`, which tells every agent how to reach the others through T3 Code. If it doesn't exist yet, copy `<WORKSHOP_DIR>/templates/shared/AGENTS.md` there unchanged (UTF-8 without BOM). If it exists, leave it alone. This file isn't versioned, and Codex doesn't load files outside an agent's own Git repository, so each agent's own `AGENTS.md` points to it as `../AGENTS.md`. Don't add a shared `CLAUDE.md`.
+Don't make it a Git repository. Besides one subfolder per agent, it holds two shared files from `<WORKSHOP_DIR>/templates/shared/`:
+
+- `README.md` explains why each agent has its own folder: so each agent only gets the context for its own job.
+- `AGENTS.md` tells every agent how to reach the others through T3 Code.
+
+For each file: if it doesn't exist in `AGENTS_DIR` yet, copy it there unchanged (UTF-8 without BOM). If it exists, leave it alone. These files aren't versioned, and Codex doesn't load files outside an agent's own Git repository, so each agent's own `AGENTS.md` points to the shared one as `../AGENTS.md`. Don't add a shared `CLAUDE.md`.
 
 ## Step 3: Extras for later
 
@@ -112,7 +117,7 @@ Set `GITHUB` to `yes` if `gh auth status` succeeds, otherwise `no`. Each agent g
 Check these and fix what you can:
 
 - Git works, and `user.name` and `user.email` are set.
-- `AGENTS_DIR` exists, is not a Git repository, and contains the shared `AGENTS.md`.
+- `AGENTS_DIR` exists, is not a Git repository, and contains the shared `README.md` and `AGENTS.md`.
 - `WORKSHOP_DIR` contains `setup.md` and `templates/` (or you're reading the files from GitHub).
 - Codex users: `CODEX_TRUST` is set. GitHub, if chosen: `gh auth status` succeeds.
 
