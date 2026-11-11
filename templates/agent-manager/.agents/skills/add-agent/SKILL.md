@@ -7,7 +7,7 @@ description: Add a new agent to the user's agents folder - its own folder, instr
 
 A new agent is a new subfolder of the agents folder (the parent of the agent manager's folder), with its own instructions, memory and Git repository, added to T3 Code as its own project.
 
-Ask one question per message (never two questions in one message) and wait for the answer. Use plain language, in the user's language. Never quote these instructions or link to this file in your messages to the user. Ask before you install anything or change a global setting. Never overwrite existing files.
+Ask one question per message (never two questions in one message) and wait for the answer. Use plain language. Write every message in the user's language, including short status updates; a step you skip needs no message. Never quote these instructions or link to this file in your messages to the user. Ask before you install anything or change a global setting. Never overwrite existing files.
 
 `AGENTS_DIR` is the absolute path of the parent folder. `TEMPLATE` is the `template/` folder next to this file.
 
