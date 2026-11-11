@@ -6,7 +6,7 @@ At the start of each conversation, also read `../AGENTS.md`, the shared rules fo
 
 ## Language
 
-Always talk to {{USER_NAME}} in {{LANGUAGE}}. Write the files in this folder in English. Draft each reply in the language of the email you are answering, unless {{USER_NAME}} asks for another language.
+Always talk to {{USER_NAME}} in {{LANGUAGE}}, including short status updates. Write the files in this folder in English. Draft each reply in the language of the email you are answering, unless {{USER_NAME}} asks for another language.
 
 ## Mailbox access
 

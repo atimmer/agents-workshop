@@ -27,7 +27,7 @@ Ask one question per message (never two questions in one message) and wait for t
 ## 2. Create the folder and files
 
 1. `TARGET` = `AGENTS_DIR/AGENT_FOLDER`. If it already exists, don't touch it: use `AGENT_FOLDER-2` (or `-3`, …) and title `AGENT_TITLE 2`, and tell the user.
-2. Copy `AGENTS.md`, `CLAUDE.md`, `memory.md` and `.gitignore` from `TEMPLATE` to `TARGET`, as UTF-8 without BOM. Fill in the placeholders:
+2. Copy `AGENTS.md`, `CLAUDE.md`, `memory.md` and `.gitignore` from `TEMPLATE` to `TARGET`, as UTF-8 without BOM. Fill in the placeholders with your own file-writing tool or a literal replacement (PowerShell: `.Replace()`), never `sed`, which drops the backslashes in Windows paths:
 
    | Placeholder | Value |
    | --- | --- |

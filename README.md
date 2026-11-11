@@ -28,7 +28,6 @@ Je hoeft niet te kunnen programmeren. De agent doet het werk en vraagt je om toe
 2. **Open T3 Code.** Je ziet *Welcome to T3 Code*. Klik bij **Agents** op **Sign in** naast **Claude**, of op **Set up** naast **Codex**. Staat er eerst **Install**? Klik daar dan eerst op.
    - Bij Claude opent er een venster met een commando: druk op Enter.
    - Daarna log je in de browser in met je Claude- of ChatGPT-account.
-   - Windows met Claude: vraagt Claude Code om Git, installeer dan eerst Git via https://git-scm.com/download/win.
    - Klik daarna op **Start**.
    - Windows: zie je een melding van *Windows Defender Firewall*? Klik op **Annuleren** (*Cancel*). T3 Code werkt gewoon.
 

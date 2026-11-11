@@ -19,7 +19,7 @@ There are two parts:
 8. **"UNVERIFIED"** means it hasn't been tested on every setup. Try it, check the result, and use the fallback if it doesn't work.
 9. **Keep these values** as you go: `LANGUAGE`, `USER_NAME`, `USER_HOME`, `AGENTS_DIR`, `WORKSHOP_DIR`, `PROVIDER` (`claude` if you're Claude Code, `codex` if you're Codex), `CODEX_TRUST` and `GITHUB` (step 3), `ICON_STYLE` (step 10), and the agents created so far with their answers.
 
-Restart after an interruption: if the user starts again in a new thread, run from step 0. The checks make finished steps fast.
+Restart after an interruption: if the user comes back to this same thread (for example after restarting T3 Code), continue where you were. If they start again in a new thread, run from step 0. The checks make finished steps fast.
 
 ---
 
@@ -35,7 +35,7 @@ Set `LANGUAGE` to `Dutch` or `English`. **From now on, write every message in `L
 
 0.2 **ASK** for the user's first name. It goes into the agents' instructions. Set `USER_NAME`.
 
-0.3 In 2–3 sentences, tell the user what is about to happen: first you prepare their computer (check a few programs, create an `agents` folder and install an agent manager, about 10 minutes, and you'll ask before installing anything). Then they choose which workflow to build first, and you turn it into an agent. Also tell them that whenever something is unclear, they can just ask you, in their own words.
+0.3 In 2–3 sentences, tell the user what is about to happen: first you prepare their computer (check a few programs, create an `agents` folder and install an agent manager, about 10 minutes; you'll always say what you install and why). Then they choose which workflow to build first, and you turn it into an agent. Also tell them that whenever something is unclear, they can just ask you, in their own words.
 
 ## Step 1: Prerequisites
 
@@ -264,7 +264,7 @@ The user designs their own agent. Help them pick something small and concrete th
    - agent-manager: `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`, `.agents/skills/add-agent/` (`SKILL.md` and its `template/` folder with `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`), `.claude/skills/add-agent/SKILL.md`. Copy the two skill folders **unchanged**: their `{{…}}` placeholders are filled in later, when the agent manager adds an agent.
    - your own agent (workflow 4): `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`
 
-   For each file: **if it already exists in `TARGET`, keep it** (only fill in placeholders still left in it). Otherwise read the template file, replace the placeholders below, and write it to `TARGET` as UTF-8 without BOM. Keep `CLAUDE.md` exactly as it is: it contains `@AGENTS.md` and makes Claude Code read `AGENTS.md`, without needing symlinks, which don't work well on Windows.
+   For each file: **if it already exists in `TARGET`, keep it** (only fill in placeholders still left in it). Otherwise read the template file, replace the placeholders below, and write it to `TARGET` as UTF-8 without BOM. Replace placeholders with your own file-writing tool or a literal replacement (PowerShell: `.Replace()`), never with `sed` or another regex tool: those drop the backslashes in Windows paths. Check the written files afterwards. Keep `CLAUDE.md` exactly as it is: it contains `@AGENTS.md` and makes Claude Code read `AGENTS.md`, without needing symlinks, which don't work well on Windows.
 
    | Placeholder | Value |
    | --- | --- |
