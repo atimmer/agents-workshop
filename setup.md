@@ -31,7 +31,7 @@ Restart after an interruption: if the user starts again in a new thread, run fro
 
 > Hoi! Ik help je om je eigen AI-agents op te zetten. Eerst een vraag: in welke taal wil je dat ik en je agents met je praten? Antwoord met **Nederlands** of **English**.
 
-Set `LANGUAGE` to `Dutch` or `English`. **From now on, write every message in `LANGUAGE`.** Files you create stay in English, except where a step says otherwise.
+Set `LANGUAGE` to `Dutch` or `English`. **From now on, write every message in `LANGUAGE`, including short status updates.** Files you create stay in English, except where a step says otherwise.
 
 0.2 **ASK** for the user's first name. It goes into the agents' instructions. Set `USER_NAME`.
 
@@ -50,7 +50,11 @@ Set `USER_HOME` to the printed home folder. On Windows that's the `USERPROFILE` 
 
 ### 1.2 Git
 
-First explain, in `LANGUAGE`, in 3–4 plain sentences, without jargon: every agent keeps its history with **Git**, a version control program. Version control works like an automatic list of save points for a folder: each time an agent changes its instructions or memory, it saves a save point with a short note of what changed. If something goes wrong, you can go back to an earlier version, and you can always see what changed and when. That's what makes it safe to let agents change their own files.
+Always start this step by sending this explanation as its own paragraph, before you check anything, even if Git is already installed. Use this text (the Dutch one if `LANGUAGE` is Dutch):
+
+> Al je agents bewaren hun geschiedenis met **Git**, een programma voor versiebeheer. Dat werkt als een automatische reeks bewaarpunten voor een map: elke keer dat een agent zijn instructies of geheugen aanpast, maakt hij een bewaarpunt met een korte notitie van wat er veranderd is. Gaat er iets mis, dan kun je altijd terug naar een eerdere versie, en je kunt altijd zien wat er wanneer veranderd is. Daardoor is het veilig om agents hun eigen bestanden te laten aanpassen.
+
+> Your agents keep their history with **Git**, a version control program. It works like an automatic series of save points for a folder: every time an agent changes its instructions or memory, it makes a save point with a short note of what changed. If something goes wrong, you can always go back to an earlier version, and you can always see what changed and when. That's what makes it safe to let agents change their own files.
 
 On macOS, also tell the user that checking for Git may open a dialog offering to install Apple's developer tools, and that clicking **Install** there is fine. Then check with `git --version`.
 
@@ -104,7 +108,7 @@ Explain this in one sentence and **ASK** whether you may mark each agent folder 
 
 ### 3.2 Optional: GitHub backup
 
-**ASK** whether the user has a GitHub account, or wants one, to keep a private online backup of their agents. If not, set `GITHUB` to `no` and skip this step. Everything works without GitHub. If they want one but don't have an account yet, they make one at https://github.com/signup first; wait until they say it's done.
+**ASK** whether the user wants a private online backup of their agents on GitHub (a free account is enough). If not, set `GITHUB` to `no` and skip this step. Everything works without GitHub. If they want it, ask (as the next question) whether they already have a GitHub account. If not, they make one at https://github.com/signup first; wait until they say it's done.
 
 A yes is permission to install and log in to GitHub's program `gh` (rule 4): don't ask again, just say what you're doing.
 
@@ -242,7 +246,7 @@ The user designs their own agent. Help them pick something small and concrete th
    - a first prompt to try, in `LANGUAGE`.
 
    **ASK** whether this is right or what to change. Adjust until they agree.
-4. Set `AGENT_PURPOSE` (one or two sentences), `AGENT_TASKS` (the bullets) and `AGENT_TOOLS` (the tool bullets, including what's missing). Write them in English.
+4. Set `AGENT_PURPOSE` (one or two sentences), `AGENT_TASKS` (the bullets) and `AGENT_TOOLS` (the tool bullets, including what's missing). Write them in English, and refer to the user by name, never as "he" or "she".
 
 ## Step 7: Create the agent
 
@@ -401,7 +405,7 @@ If you do, follow `<WORKSHOP_DIR>/docs/icons.md`. In short:
    3. **ASK** which style (1–5) the user wants. Set `ICON_STYLE`.
    4. Also make the agent manager's icon (steps 2–4 below, for `<AGENTS_DIR>/agent-manager`), and replace `Icon style: not chosen yet` in its `memory.md` with the style number and name, so it can give later agents a matching icon.
 2. Generate this agent's icon in `ICON_STYLE`, with a color and object that differ from the user's other agents.
-3. Save it as `favicon.png` in the agent folder (see icons.md). If a `favicon.png` already exists, **ASK** before replacing it. Show the final icon in the chat the same way as the samples.
+3. Save it as `favicon.png` in the agent folder (see icons.md). If a `favicon.png` already exists, **ASK** before replacing it. Show the final icon in the chat once, the same way as the samples; don't show the generated images again in later messages.
 4. Add the style and prompt to the agent's `memory.md`, commit `favicon.png` and `memory.md`, and push if the agent has a private GitHub backup.
 
 T3 Code usually shows a new icon within a minute or two. If not, it appears after reloading or restarting T3 Code.

@@ -7,7 +7,7 @@ description: Add a new agent to the user's agents folder - its own folder, instr
 
 A new agent is a new subfolder of the agents folder (the parent of the agent manager's folder), with its own instructions, memory and Git repository, added to T3 Code as its own project.
 
-Ask one question per message and wait for the answer. Use plain language. Ask before you install anything or change a global setting. Never overwrite existing files.
+Ask one question per message (never two questions in one message) and wait for the answer. Use plain language, in the user's language. Never quote these instructions or link to this file in your messages to the user. Ask before you install anything or change a global setting. Never overwrite existing files.
 
 `AGENTS_DIR` is the absolute path of the parent folder. `TEMPLATE` is the `template/` folder next to this file.
 
@@ -22,7 +22,7 @@ Ask one question per message and wait for the answer. Use plain language. Ask be
    - a first prompt to try, in the user's language.
 
    **Ask** whether this is right or what to change. Adjust until they agree.
-4. Set `AGENT_PURPOSE` (one or two sentences), `AGENT_TASKS` (the bullets) and `AGENT_TOOLS` (the tool bullets, including what's missing), in English.
+4. Set `AGENT_PURPOSE` (one or two sentences), `AGENT_TASKS` (the bullets) and `AGENT_TOOLS` (the tool bullets, including what's missing), in English. Refer to the user by name, never as "he" or "she".
 
 ## 2. Create the folder and files
 
@@ -69,7 +69,7 @@ Load the T3 tools with your tool search if they're deferred (`t3_project_list`, 
 
 Only if you have an image-generation tool right now. Otherwise skip this step and don't mention it.
 
-Use the icon style in your `memory.md`. If no style is chosen yet, offer the five styles from https://github.com/atimmer/agents-workshop/blob/main/docs/icons.md first, with a sample of each in the chat, and save the choice in your `memory.md`. Follow that page for the prompt, the size and where to save it: `favicon.png` in `TARGET`. Pick a color and object that differ from the other agents' icons. Show the icon in the chat, write the style and prompt in the new agent's `memory.md`, and commit both files.
+Use the icon style in your `memory.md`. If no style is chosen yet, offer the five styles from https://github.com/atimmer/agents-workshop/blob/main/docs/icons.md first, with a sample of each in the chat, and save the choice in your `memory.md`. Follow that page for the prompt, the size and where to save it: `favicon.png` in `TARGET`. Pick a color and object that differ from the other agents' icons. Show the icon in the chat once (don't repeat the generated images later), write the style and prompt in the new agent's `memory.md`, and commit both files.
 
 ## 7. Connectors
 
@@ -79,4 +79,4 @@ If the agent needs ready-made connectors, walk the user through connecting each 
 
 1. Check: the folder has `AGENTS.md`, `CLAUDE.md` and `memory.md` with no `{{` left, `git -C "<TARGET>" status --porcelain` is empty, and the agent is a T3 project.
 2. Tell the user how to use it: click **New thread** (the pencil icon at the top of the sidebar) and choose the new project, and paste the first prompt from step 1.
-3. Add one line to your own `memory.md` under "Done and decided" (date, title, folder) and commit it.
+3. Add one line at the end of the "Done and decided" list in your own `memory.md` (date, title, folder), and commit it.
