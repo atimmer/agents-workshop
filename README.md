@@ -33,6 +33,10 @@ Je hoeft niet te kunnen programmeren. De agent doet het werk en vraagt je om toe
 
    ![Welcome to T3 Code: Sign in bij Claude, Set up bij Codex, daarna Start](docs/images/01-sign-in.png)
 
+   Op een computer waar Claude Code nog niet op staat, zie je eerst **Install** (hier op Windows). Daarna verandert die knop in **Sign in**.
+
+   ![Op een nieuwe computer: Install bij Claude, Set up bij Codex](docs/images/01b-install-windows.png)
+
 3. **Start een nieuw gesprek.** Zie je *What should we work on?*: klik op **Start without a project**.
 
    ![Start without a project](docs/images/02-start-without-project.png)
