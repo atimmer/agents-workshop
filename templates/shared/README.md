@@ -25,4 +25,6 @@ This folder itself is not a Git repository, and these two files aren't versioned
 
 ## Adding an agent
 
-Add a new agent when a task has its own rules, memory or tools, or when an existing agent's instructions start covering unrelated things. Give it its own subfolder with an `AGENTS.md`, a `CLAUDE.md` containing `@AGENTS.md`, a `memory.md`, and its own Git repository, and add the folder as a T3 Code project. The setup at https://github.com/atimmer/agents-workshop/blob/main/setup.md can do this for you: choose "Define your own workflow".
+Add a new agent when a task has its own rules, memory or tools, or when an existing agent's instructions start covering unrelated things. It gets its own subfolder with an `AGENTS.md`, a `CLAUDE.md` containing `@AGENTS.md`, a `memory.md`, and its own Git repository, and the folder becomes a T3 Code project.
+
+The **Agent manager** (`agent-manager/`) does this for you: start a new thread in its T3 Code project and describe the task. Its `add-agent` skill has the steps.

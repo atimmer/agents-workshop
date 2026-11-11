@@ -9,3 +9,5 @@ Stay in your own folder and never edit another agent's files. Ask the user befor
 1. Find that agent's project with `t3_project_list` (its `workspaceRoot` is the agent's folder). Load the T3 tools with your tool search if they're deferred.
 2. Start a new thread there with `t3_thread_launch`, with a clear message that makes sense without this conversation: include the concrete facts it needs (names, URLs, dates). If your rules say you may only start a thread when the user asks for one, first ask "Shall I hand this to the <agent> agent?" and start it when they say yes.
 3. Tell the user which thread you started. If the T3 tools aren't available, give the user a ready-to-paste prompt and ask them to start a new thread in that agent's project (right-click the project in the sidebar → **New thread**).
+
+To add, rename or retire an agent, hand it to the **Agent manager** (`agent-manager/`).

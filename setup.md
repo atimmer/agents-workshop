@@ -4,7 +4,7 @@
 
 There are two parts:
 
-- **Part 1 (steps 0–4): prepare the computer.** Finish all of it before you mention any workflow.
+- **Part 1 (steps 0–4): prepare the computer** and install the **agent manager**, the agent that keeps track of the user's agents and adds new ones. Finish all of it before you mention any workflow.
 - **Part 2 (steps 5–11): workflows.** The user picks one workflow at a time, and each one becomes an agent. Afterwards they can pick another.
 
 ## Rules for you
@@ -35,7 +35,7 @@ Set `LANGUAGE` to `Dutch` or `English`. **From now on, write every message in `L
 
 0.2 **ASK** for the user's first name. It goes into the agents' instructions. Set `USER_NAME`.
 
-0.3 In 2–3 sentences, tell the user what is about to happen: first you prepare their computer (check a few programs and create an `agents` folder, about 10 minutes, and you'll ask before installing anything). Then they choose which workflow to build first, and you turn it into their first agent.
+0.3 In 2–3 sentences, tell the user what is about to happen: first you prepare their computer (check a few programs, create an `agents` folder and install an agent manager, about 10 minutes, and you'll ask before installing anything). Then they choose which workflow to build first, and you turn it into an agent.
 
 ## Step 1: Prerequisites
 
@@ -112,7 +112,21 @@ Explain this in one sentence and **ASK** whether you may mark each agent folder 
 
 Set `GITHUB` to `yes` if `gh auth status` succeeds, otherwise `no`. Each agent gets its own private repository in step 8.
 
-## Step 4: Computer ready
+## Step 4: The agent manager
+
+Every user gets this agent. It knows which agents there are, explains how the folder works, and adds new agents with its `add-agent` skill, so the user doesn't need this setup to grow their agents later.
+
+### 4.1 Create it
+
+Follow steps 7.1, 7.2, 8 and 9 for this agent, then come back here:
+
+| Agent | Folder | T3 project title | Template |
+| --- | --- | --- | --- |
+| Agent manager | `agent-manager` | `Agent manager` | `templates/agent-manager/` |
+
+Skip 7.3 (it has no tools of its own) and step 10 (it gets its icon together with the first workflow agent, once the user has picked a style). Keep the T3 project id from step 9.
+
+### 4.2 Computer ready
 
 Check these and fix what you can:
 
@@ -120,12 +134,28 @@ Check these and fix what you can:
 - `AGENTS_DIR` exists, is not a Git repository, and contains the shared `README.md` and `AGENTS.md`.
 - `WORKSHOP_DIR` contains `setup.md` and `templates/` (or you're reading the files from GitHub).
 - Codex users: `CODEX_TRUST` is set. GitHub, if chosen: `gh auth status` succeeds.
+- The agent manager: its folder is a Git repository with a commit, and it's a T3 project (or the user is adding it by hand).
 
-Show this as a short checklist (✅, or ⚠️ with a few words on why). Then, in `LANGUAGE`, in 2–4 sentences, explain the idea in your own words:
+### 4.3 Let the agent manager introduce itself
 
-> Each workflow gets its own agent: a folder with its own instructions and memory. An AI can only keep a limited amount in mind at once. A bookkeeper doesn't need your budgeting rules, and an email assistant doesn't need to know your WordPress site. Several small, focused agents work better than one agent that has to know everything.
+Skip this if the `agent-manager` folder already existed when you reached 4.1 (an earlier run already introduced it); in 4.4, just say the user can ask it anything in its own project. Otherwise: this is part of the setup the user asked for, so you don't need to ask first. Start a new thread in the agent manager's project, where it introduces itself while the user continues here. Load `t3_thread_launch` with your tool search if it's deferred (Claude Code: `select:mcp__t3-code__t3_thread_launch`; Codex: search tools for `t3_thread_launch`). Call it with `projectId` = the agent manager's project id, and leave out model and modes. Use the title and message in `LANGUAGE`, with `USER_NAME` filled in:
 
-Put the checklist and the explanation in one message, and end that message with the question from step 5 (do the folder check from step 5 first).
+- Dutch: title `Kennismaking`, message: `Hoi, ik ben <USER_NAME>. Stel jezelf eens voor: wat doe je, hoe is de map met mijn agents opgebouwd, en hoe voeg ik er later meer agents aan toe?`
+- English: title `Introduction`, message: `Hi, I'm <USER_NAME>. Please introduce yourself: what do you do, how is the folder with my agents organised, and how do I add more agents later?`
+
+Don't wait for that thread. If the tool isn't available, fails, or the project isn't in T3 Code yet, give the user that message instead: they right-click **Agent manager** in the sidebar → **New thread**, and paste it.
+
+### 4.4 Tell the user
+
+In one message, in `LANGUAGE`:
+
+1. The checklist from 4.2 (✅, or ⚠️ with a few words on why).
+2. In one or two sentences: their **Agent manager** is introducing itself in a new thread (mention it with the `link` that `t3_thread_launch` returned), which they can read whenever they like; you continue here. Or, if you couldn't start it, the message to paste.
+3. In 2–4 sentences, the idea in your own words:
+
+   > Each workflow gets its own agent: a folder with its own instructions and memory. An AI can only keep a limited amount in mind at once. A bookkeeper doesn't need your budgeting rules, and an email assistant doesn't need to know your WordPress site. Several small, focused agents work better than one agent that has to know everything.
+
+End that message with the question from step 5 (do the folder check from step 5 first).
 
 ---
 
@@ -133,7 +163,7 @@ Put the checklist and the explanation in one message, and end that message with 
 
 ## Step 5: Choose a workflow
 
-First list the folders in `AGENTS_DIR`, so you know which agents already exist (from an earlier run, or from an earlier round of this loop).
+First list the folders in `AGENTS_DIR`, so you know which agents already exist (from an earlier run, or from an earlier round of this loop). Leave out `agent-manager`: it isn't a workflow.
 
 **ASK** which workflow the user wants to work on first. Show all four options, numbered, with one line each. The first time, use this text (the Dutch one if `LANGUAGE` is Dutch):
 
@@ -163,7 +193,7 @@ Workflows 2 and 3 share one agent, the **WordPress site agent**. It always gets 
 | --- | --- | --- | --- | --- |
 | 1 | Email assistant | `email-assistant` | `Email assistant` | `templates/email-assistant/` |
 | 2, 3 | WordPress site agent | `wordpress-site` | `WordPress site` | `templates/wordpress-site/` |
-| 4 | The user's own agent | `<AGENT_FOLDER>` | `<AGENT_TITLE>` | `templates/custom-agent/` |
+| 4 | The user's own agent | `<AGENT_FOLDER>` | `<AGENT_TITLE>` | `templates/agent-manager/.agents/skills/add-agent/template/` (the agent manager's `add-agent` skill uses the same files) |
 
 Then go to the matching part of step 6.
 
@@ -211,18 +241,19 @@ The user designs their own agent. Help them pick something small and concrete th
 
 ## Step 7: Create the agent
 
-`TARGET` = `<AGENTS_DIR>/<folder>` and `TEMPLATE` = `<WORKSHOP_DIR>/<template>` (from the table in step 5).
+`TARGET` = `<AGENTS_DIR>/<folder>` and `TEMPLATE` = `<WORKSHOP_DIR>/<template>` (from the table in step 5, or step 4.1 for the agent manager).
 
 ### 7.1 Folder, files and Git
 
 1. **Check `TARGET` first:**
    - It doesn't exist: create it.
-   - It's an agent from an earlier run (its `AGENTS.md` starts with `# WordPress site agent`, `# Email assistant`, or `# <AGENT_TITLE>`): use it. WordPress only: if the URL in its `memory.md` differs from `SITE_URL`, **ASK** whether to keep the existing agent for the old site, or create a separate agent for the new site (unless the user already chose a separate agent in 6.3). For a separate agent, use folder `wordpress-site-2` and title `WordPress site 2` (or `-3`, …).
+   - It's an agent from an earlier run (its `AGENTS.md` starts with `# WordPress site agent`, `# Email assistant`, `# Agent manager`, or `# <AGENT_TITLE>`): use it. WordPress only: if the URL in its `memory.md` differs from `SITE_URL`, **ASK** whether to keep the existing agent for the old site, or create a separate agent for the new site (unless the user already chose a separate agent in 6.3). For a separate agent, use folder `wordpress-site-2` and title `WordPress site 2` (or `-3`, …).
    - Anything else: leave it alone. Use `<folder>-2` (or `-3`, …) and title `<title> 2` instead, and tell the user.
 2. Copy these files from `TEMPLATE`. Hidden files (starting with `.`) are included, so don't skip them.
    - wordpress-site: `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`, `.mcp.json`, `.claude/settings.json`, `.codex/config.toml`
    - email-assistant: `AGENTS.md`, `CLAUDE.md`, `rules.md`, `memory.md`, `.gitignore`
-   - custom-agent: `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`
+   - agent-manager: `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`, `.agents/skills/add-agent/` (`SKILL.md` and its `template/` folder with `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`), `.claude/skills/add-agent/SKILL.md`. Copy the two skill folders **unchanged**: their `{{…}}` placeholders are filled in later, when the agent manager adds an agent.
+   - your own agent (workflow 4): `AGENTS.md`, `CLAUDE.md`, `memory.md`, `.gitignore`
 
    For each file: **if it already exists in `TARGET`, keep it** (only fill in placeholders still left in it). Otherwise read the template file, replace the placeholders below, and write it to `TARGET` as UTF-8 without BOM. Keep `CLAUDE.md` exactly as it is: it contains `@AGENTS.md` and makes Claude Code read `AGENTS.md`, without needing symlinks, which don't work well on Windows.
 
@@ -232,11 +263,12 @@ The user designs their own agent. Help them pick something small and concrete th
    | `{{LANGUAGE}}` | `LANGUAGE` |
    | `{{SITE_URL}}` | `SITE_URL` (WordPress only) |
    | `{{EMAIL_PROVIDER}}` | `EMAIL_PROVIDER` (email only) |
+   | `{{CODEX_TRUST}}`, `{{GITHUB}}` | `CODEX_TRUST`, `GITHUB` (agent manager only) |
    | `{{AGENT_TITLE}}`, `{{AGENT_PURPOSE}}`, `{{AGENT_TASKS}}`, `{{AGENT_TOOLS}}` | from step 6.4 (own agent only) |
    | `{{DATE}}` | today, `YYYY-MM-DD` |
 
 3. If `TARGET/.git` doesn't exist, run `git -C "<TARGET>" init -b main`. Check for the `.git` folder itself: some home folders are inside a Git repository already.
-4. Commit only the files from the list above, leaving out any that `.gitignore` lists: `git -C "<TARGET>" add -- <files>`, then `git -C "<TARGET>" commit -m "Set up <title> agent"`. "Nothing to commit" is fine.
+4. Commit only the files from the list above (for the skill folders, the folders themselves), leaving out any that `.gitignore` lists: `git -C "<TARGET>" add -- <files>`, then `git -C "<TARGET>" commit -m "Set up <title> agent"`. "Nothing to commit" is fine.
 
 Each agent folder is its own Git repository. Use Git only, no other version control tools.
 
@@ -332,7 +364,7 @@ Only if `GITHUB` is `yes`.
 
 ## Step 9: Add the agent to T3 Code
 
-Each agent becomes its own T3 Code project, with the title from the table in step 5 and the agent folder as its workspace.
+Each agent becomes its own T3 Code project, with the title from the table in step 5 (or 4.1) and the agent folder as its workspace.
 
 **A. T3 tools.** T3 Code gives you MCP tools from a server called `t3-code`: `t3_project_list`, `t3_project_create`, and `t3_project_update`. They're often *deferred*: load them with your tool search (Claude Code: ToolSearch with `select:mcp__t3-code__t3_project_list,mcp__t3-code__t3_project_create,mcp__t3-code__t3_project_update`; Codex: search tools for `t3_project`). Then:
 
@@ -362,6 +394,7 @@ If you do, follow `<WORKSHOP_DIR>/docs/icons.md`. In short:
    1. Generate one sample per style (five) for this agent.
    2. Show all five in the chat, each as an image labelled with its number and style name, so the user can see them: `![1 – Cut-paper](<absolute path to the PNG>)`. On Windows, use forward slashes in the path (`C:/Users/Sam/…`).
    3. **ASK** which style (1–5) the user wants. Set `ICON_STYLE`.
+   4. Also make the agent manager's icon (steps 2–4 below, for `<AGENTS_DIR>/agent-manager`), and replace `Icon style: not chosen yet` in its `memory.md` with the style number and name, so it can give later agents a matching icon.
 2. Generate this agent's icon in `ICON_STYLE`, with a color and object that differ from the user's other agents.
 3. Save it as `favicon.png` in the agent folder (see icons.md). If a `favicon.png` already exists, **ASK** before replacing it. Show the final icon in the chat the same way as the samples.
 4. Add the style and prompt to the agent's `memory.md`, commit `favicon.png` and `memory.md`, and push if the agent has a private GitHub backup.
@@ -372,7 +405,7 @@ T3 Code usually shows a new icon within a minute or two. If not, it appears afte
 
 Check each item below for this agent and fix what you can. Then **show the user the checklist itself**, one line per item: ✅ when it's done and checked, ⚠️ when it's skipped, failed or not checked yet, each ⚠️ with a few words on why. Leave out items that don't apply.
 
-- The agent folder has `AGENTS.md`, `CLAUDE.md` (containing `@AGENTS.md`), and its memory files. No placeholders are left: search for `{{`.
+- The agent folder has `AGENTS.md`, `CLAUDE.md` (containing `@AGENTS.md`), and its memory files. No placeholders are left: search for `{{` (outside the agent manager's `.agents/` and `.claude/` folders, where they belong).
 - The agent folder is its own Git repository with at least one commit, and `git -C "<TARGET>" status --porcelain` is empty.
 - WordPress agent: `.mcp.json` and `.codex/config.toml` exist and are valid. With an inside connection: `git -C "<TARGET>" check-ignore .mcp.json .codex/config.toml` lists both, and the connection test in 7.3 passed.
 - Codex users: the agent path is in `<CODEX_HOME>/config.toml` with `trust_level = "trusted"`.
@@ -395,4 +428,4 @@ Then **ASK**: will they try the first prompt now (and come back to tell you whet
 
 - **Try it now:** wait until they come back. If a tool is missing, help fix it: Codex needs the trusted folder (7.2), the mailbox and other connectors are connected in the browser (7.3), and new tools only appear in a new thread. Then ask whether they want another workflow or to stop.
 - **Another workflow:** go back to step 5.
-- **Stop:** send a short closing message that lists their agents and reminds them they can come back to this thread any time to add another workflow.
+- **Stop:** send a short closing message that lists their agents. Remind them that to add another agent later, they start a new thread in the **Agent manager** project and describe what they need.

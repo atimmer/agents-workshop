@@ -6,4 +6,4 @@ What this agent has learned about {{AGENT_TITLE}} and about how {{USER_NAME}} li
 
 ## Done and decided
 
-- {{DATE}}: agent set up during the WordCamp NL 2026 workshop.
+- {{DATE}}: agent set up.

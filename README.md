@@ -49,10 +49,12 @@ Gaat er iets mis, of heb je T3 Code opnieuw opgestart? Start een nieuw gesprek e
 
 Elke agent staat als eigen project in de zijbalk van T3 Code. Klik met de rechtermuisknop op het project → **New thread** en stel je vraag. Je agents staan in de map `agents` in je thuismap. Daar staan ook twee gedeelde bestanden: `README.md` legt uit waarom elke agent een eigen map heeft, en met `AGENTS.md` kunnen je agents elkaar via T3 Code inschakelen. Elke agent heeft een eigen Git-geschiedenis, en als je wilt ook een privé-back-up op GitHub.
 
+Iedereen krijgt ook een **Agent manager**. Die weet welke agents je hebt, legt uit hoe de map werkt en maakt nieuwe agents voor je: start een nieuw gesprek in zijn project en vertel wat je nodig hebt. Aan het eind van de voorbereiding stelt hij zich in een eigen gesprek aan je voor.
+
 ## Voor de nieuwsgierigen
 
 - [`setup.md`](setup.md): de stappen voor de agent (Engels)
-- [`templates/`](templates/): de startbestanden per agent (ook een leeg sjabloon voor je eigen workflow)
+- [`templates/`](templates/): de startbestanden per agent, ook van de Agent manager en zijn skill om nieuwe agents te maken
 - [`docs/connectors.md`](docs/connectors.md): hoe de koppelingen werken, en wat nog niet getest is
 - [`docs/icons.md`](docs/icons.md): de stijlen voor agent-iconen
 

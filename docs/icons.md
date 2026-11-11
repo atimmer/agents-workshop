@@ -24,6 +24,7 @@ Show these to the user, one line each, in their language:
 | --- | --- | --- |
 | WordPress site | a browser window with a large magnifying glass in front of it | cobalt `#4A6CF7` |
 | Email assistant | a wide sealed envelope | coral `#FF806E` |
+| Agent manager | a large folder with a small gear on its front | teal `#14A39A` |
 
 Later agents: pick a new object that suits their task, and a new color.
 
