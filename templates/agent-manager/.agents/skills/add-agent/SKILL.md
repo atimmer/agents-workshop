@@ -14,7 +14,7 @@ Ask one question per message (never two questions in one message) and wait for t
 ## 1. Understand the task
 
 1. Look at the existing agents (`AGENTS_DIR/*/AGENTS.md`). If the task fits one of them, say so and offer to hand it over instead (see `../AGENTS.md`).
-2. If it's not clear yet, **ask** what the agent should help with: a task that recurs, takes time, or that the user keeps putting off. Ask at most two follow-up questions about what goes in, what should come out and how often.
+2. If it's not clear yet, **ask** what the agent should help with: a task that recurs, takes time, or that the user keeps putting off. If something important is still unclear (what goes in, what should come out, how often), ask **one** follow-up question about it, wait for the answer, and only then ask a second one if you still need it. Never more than two follow-ups in total.
 3. Propose the agent in one message:
    - a short English title (`AGENT_TITLE`, e.g. `Social posts`) and a folder name (`AGENT_FOLDER`, lowercase with hyphens, e.g. `social-posts`);
    - what it does, in 2–4 bullets;
