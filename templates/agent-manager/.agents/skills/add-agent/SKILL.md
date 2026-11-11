@@ -54,7 +54,7 @@ trust_level = "trusted"
 
 ## 4. Optional: private GitHub backup
 
-Only if your `memory.md` says GitHub backup: `yes`, and `gh auth status` succeeds. Run `gh repo create agents-<AGENT_FOLDER> --private --source "<TARGET>" --remote origin --push`. If that name is taken, **ask** for another one. Never push passwords or other secrets.
+Only if your `memory.md` says GitHub backup: `yes`, and `gh auth status` succeeds. Use the full path to `gh` from your `memory.md` if one is noted there. Run `gh repo create agents-<AGENT_FOLDER> --private --source "<TARGET>" --remote origin --push`. If that name is taken, **ask** for another one. Never push passwords or other secrets.
 
 ## 5. Add it to T3 Code
 
@@ -62,8 +62,8 @@ Load the T3 tools with your tool search if they're deferred (`t3_project_list`, 
 
 1. Call `t3_project_list`. If a project's `workspaceRoot` already equals `TARGET`, it's done.
 2. Otherwise call `t3_project_create` with `title` = `AGENT_TITLE` and `workspaceRoot` = the absolute `TARGET` path, in native form (Windows: `C:\Users\Sam\agents\social-posts`).
-3. If it fails with `capability_denied`, **ask** the user to switch this thread to **Full access**: click the model name under the message box → **Permissions** → **Full access**, and make sure the button under the message box says **Build**, not Plan. Then try again.
-4. If the tools aren't there, or the user doesn't want to switch, tell them how to do it by hand: in the sidebar, **Add project** (the + button) → **Local folder** → choose `TARGET`. To rename it: right-click the project → **Project settings**.
+3. If it fails with `capability_denied`, **ask** the user to switch this thread to **Full access**: click the permissions button in the message box (it shows the current mode, for example *Auto*) and choose **Full access**. Then try again.
+4. If the tools aren't there, or the user doesn't want to switch, tell them how to do it by hand: at the top of the sidebar, **Add project** (the folder icon with a +) → **Local folder** → paste the full path `TARGET` → **Add**. To rename it: right-click the project name at the top of the window → **Project settings** → **Name**.
 
 ## 6. Icon (only if you can generate images)
 
@@ -78,5 +78,5 @@ If the agent needs ready-made connectors, walk the user through connecting each 
 ## 8. Done
 
 1. Check: the folder has `AGENTS.md`, `CLAUDE.md` and `memory.md` with no `{{` left, `git -C "<TARGET>" status --porcelain` is empty, and the agent is a T3 project.
-2. Tell the user how to use it: right-click the new project in the sidebar → **New thread**, and paste the first prompt from step 1.
+2. Tell the user how to use it: click **New thread** (the pencil icon at the top of the sidebar) and choose the new project, and paste the first prompt from step 1.
 3. Add one line to your own `memory.md` under "Done and decided" (date, title, folder) and commit it.

@@ -25,29 +25,53 @@ Je hoeft niet te kunnen programmeren. De agent doet het werk en vraagt je om toe
 1. **Installeer T3 Code** via https://t3.codes, of via [GitHub Releases](https://github.com/pingdotgg/t3code/releases).
    - Windows: `winget install T3Tools.T3Code`
    - Mac: `brew install --cask t3-code`
-2. **Open T3 Code** en volg *Set up T3 Code*. Bij **Connect your agents** klik je bij **Claude Code** of **Codex** op **Install** en daarna op **Sign in**.
+2. **Open T3 Code.** Je ziet *Welcome to T3 Code*. Klik bij **Agents** op **Sign in** naast **Claude**, of op **Set up** naast **Codex**. Staat er eerst **Install**? Klik daar dan eerst op.
    - Bij Claude opent er een venster met een commando: druk op Enter.
    - Daarna log je in de browser in met je Claude- of ChatGPT-account.
    - Windows met Claude: vraagt Claude Code om Git, installeer dan eerst Git via https://git-scm.com/download/win.
-3. **Start een nieuw gesprek.**
-   - Zie je *What should we work on?*: klik op **Start without a project**.
-   - Zie je die knop niet: klik op **Add project** → **Local folder** en kies je persoonlijke map (je thuismap).
-4. **Kies het model en de toegang.** Klik onder het tekstvak op de modelnaam en kies *Claude Opus 5.5* (Claude) of *GPT-6.1 Sol* (Codex), met *medium* redeneren.
-   - Onderaan dat menu staat **Permissions**. Dat moet op **Full access** staan (het schildje met een streep erdoor); dat is de standaard. Staat er *Supervised*, *Auto-accept edits* of *Auto*? Klik erop en kies **Full access**. Alleen dan kan de agent je agents als project aan T3 Code toevoegen. Hij vraagt je nog steeds eerst om toestemming voordat hij iets installeert.
-   - Staat er onder het tekstvak een knop **Plan**? Klik erop, zodat er **Build** staat.
-5. **Plak dit bericht** en druk op Enter:
+   - Klik daarna op **Start**.
+
+   ![Welcome to T3 Code: Sign in bij Claude, Set up bij Codex, daarna Start](docs/images/01-sign-in.png)
+
+3. **Start een nieuw gesprek.** Zie je *What should we work on?*: klik op **Start without a project**.
+
+   ![Start without a project](docs/images/02-start-without-project.png)
+
+4. **Kies het model.** Klik onder het tekstvak op de modelnaam. Kies links het logo van Claude of van Codex, dan **Claude Opus 5.5** of **GPT-6.1-Sol**, en rechts onder *Reasoning* **Medium**.
+
+   ![Model kiezen bij Claude: Claude Opus 5.5, Medium](docs/images/03-model-claude.png)
+
+   ![Model kiezen bij Codex: GPT-6.1-Sol, Medium](docs/images/03-model-codex.png)
+
+5. **Controleer de toegang.** Rechtsonder het tekstvak staat de toegang. Die moet op **Full access** staan; dat is de standaard. Staat er *Supervised*, *Auto-accept edits* of *Auto*? Klik erop en kies het rechter icoon, **Full access**. Alleen dan kan de agent je agents als project aan T3 Code toevoegen. Hij vertelt je steeds wat hij doet en waarom.
+
+   ![Toegang op Full access](docs/images/04-permissions.png)
+
+6. **Plak dit bericht** en klik op het pijltje (of druk op Enter):
 
    ```text
    Voer de stappen uit in https://github.com/atimmer/agents-workshop/blob/main/setup.md
    ```
 
-6. **Beantwoord de vragen van de agent.** De agent vraagt steeds één ding tegelijk. Vraagt hij toestemming om iets uit te voeren? Lees kort wat het is en klik op **Approve**. Vraagt hij je de toegang op Full access te zetten? Doe dat zoals bij stap 4 en stuur dan *klaar*.
+   ![Het bericht in het tekstvak, en het pijltje om te versturen](docs/images/05-send.png)
+
+7. **Beantwoord de vragen van de agent.** De agent vraagt steeds één ding tegelijk. Is iets onduidelijk? Vraag het gewoon aan de agent, in je eigen woorden.
+
+   > **If something is unclear, just talk to it.**
+
+   Vraagt hij toestemming om iets uit te voeren? Lees kort wat het is en klik op **Approve**. Vraagt hij je de toegang op Full access te zetten? Doe dat zoals bij stap 5 en stuur dan *klaar*.
 
 Gaat er iets mis, of heb je T3 Code opnieuw opgestart? Start een nieuw gesprek en plak hetzelfde bericht nog een keer. De agent slaat over wat al klaar is.
 
 ## Na afloop
 
-Elke agent staat als eigen project in de zijbalk van T3 Code. Klik met de rechtermuisknop op het project → **New thread** en stel je vraag. Je agents staan in de map `agents` in je thuismap. Daar staan ook twee gedeelde bestanden: `README.md` legt uit waarom elke agent een eigen map heeft, en met `AGENTS.md` kunnen je agents elkaar via T3 Code inschakelen. Elke agent heeft een eigen Git-geschiedenis, en als je wilt ook een privé-back-up op GitHub.
+Elke agent is een eigen project in T3 Code. Wil je iets vragen aan een agent? Klik bovenaan de zijbalk op het potloodje (**New thread**), kies het project van die agent, en stel je vraag.
+
+![Nieuw gesprek: het potloodje bovenaan de zijbalk](docs/images/06-new-thread.png)
+
+![Kies het project van de agent](docs/images/07-choose-project.png)
+
+Je agents staan in de map `agents` in je thuismap. Daar staan ook twee gedeelde bestanden: `README.md` legt uit waarom elke agent een eigen map heeft, en met `AGENTS.md` kunnen je agents elkaar via T3 Code inschakelen. Elke agent heeft een eigen Git-geschiedenis, en als je wilt ook een privé-back-up op GitHub.
 
 Iedereen krijgt ook een **Agent manager**. Die weet welke agents je hebt, legt uit hoe de map werkt en maakt nieuwe agents voor je: start een nieuw gesprek in zijn project en vertel wat je nodig hebt. Aan het eind van de voorbereiding stelt hij zich in een eigen gesprek aan je voor.
 

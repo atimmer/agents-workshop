@@ -12,7 +12,7 @@ There are two parts:
 1. **One question per message.** At every **ASK** step, send exactly one question and wait for the answer. Never put a second question or request in the same message.
 2. **Wait for the user's actions.** When the user has to do something themselves (click, install, log in, connect), ask them to tell you when it's done, and wait. Then check the result if you can.
 3. **Use plain language.** Keep messages short and skip jargon. When you install or change something, say in one sentence what it is and why it's needed.
-4. **Ask before you install anything or change a global setting** (Git identity, Codex trusted folders).
+4. **Ask before you install anything or change a global setting** (Git identity, Codex trusted folders). Two exceptions, where you install without asking, after saying in one sentence what you install and why: Git, which every agent needs, and anything an option needs once the user has chosen that option (the GitHub backup needs `gh`). The choice is the permission; don't ask again.
 5. **Never delete or overwrite the user's files.** If a file you would create already exists, keep it. Every step is safe to run again: check what's already done and skip it.
 6. **Use the right commands for this computer.** Find out which OS and which shell you're in (step 1.1). Windows commands differ between PowerShell and Git Bash. Always use absolute paths. Shell variables don't survive between your commands, so write the actual paths into each command.
 7. **If a step fails twice,** stop, explain the problem simply, and offer to skip it. Skipped steps go in the checklists.
@@ -35,7 +35,7 @@ Set `LANGUAGE` to `Dutch` or `English`. **From now on, write every message in `L
 
 0.2 **ASK** for the user's first name. It goes into the agents' instructions. Set `USER_NAME`.
 
-0.3 In 2–3 sentences, tell the user what is about to happen: first you prepare their computer (check a few programs, create an `agents` folder and install an agent manager, about 10 minutes, and you'll ask before installing anything). Then they choose which workflow to build first, and you turn it into an agent.
+0.3 In 2–3 sentences, tell the user what is about to happen: first you prepare their computer (check a few programs, create an `agents` folder and install an agent manager, about 10 minutes, and you'll ask before installing anything). Then they choose which workflow to build first, and you turn it into an agent. Also tell them that whenever something is unclear, they can just ask you, in their own words.
 
 ## Step 1: Prerequisites
 
@@ -50,9 +50,11 @@ Set `USER_HOME` to the printed home folder. On Windows that's the `USERPROFILE` 
 
 ### 1.2 Git
 
-Git is "save points for folders": every agent keeps its history in Git. On macOS, first tell the user that checking for Git may open a dialog offering to install Apple's developer tools, and that clicking **Install** there is fine. Then check with `git --version`.
+First explain, in `LANGUAGE`, in 3–4 plain sentences, without jargon: every agent keeps its history with **Git**, a version control program. Version control works like an automatic list of save points for a folder: each time an agent changes its instructions or memory, it saves a save point with a short note of what changed. If something goes wrong, you can go back to an earlier version, and you can always see what changed and when. That's what makes it safe to let agents change their own files.
 
-If it's missing, explain it and **ASK** whether you may install it. Then install it:
+On macOS, also tell the user that checking for Git may open a dialog offering to install Apple's developer tools, and that clicking **Install** there is fine. Then check with `git --version`.
+
+If it's missing, say in one sentence that you're installing it now (rule 4: no need to ask). Then install it:
 
 - **Windows:** check `winget --version` first. If winget exists, run
   `winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements`
@@ -67,7 +69,7 @@ If it's missing, explain it and **ASK** whether you may install it. Then install
 
 ### 1.3 Git identity
 
-Check `git config --global user.name` and `git config --global user.email`. If both are set, move on. For each one that's empty, explain that Git labels every save point on this computer with a name and email, then **ASK** which one to use. Set it with `git config --global user.name "<name>"` or `git config --global user.email "<email>"`. If the user plans to use GitHub, suggest the email address of their GitHub account.
+Check `git config --global user.name` and `git config --global user.email`. If both are set, move on. Otherwise, first explain in plain words, in `LANGUAGE`: Git signs every save point with who made it, a name and an email address, like a signature under a change. It needs these before it can save anything. They stay on this computer: nobody sees them unless an agent's history is put online, for example in the private GitHub backup later on (which only the user can see). Any name works, and the email doesn't have to be one they check often. Then, for each one that's empty, **ASK** which one to use. Set it with `git config --global user.name "<name>"` or `git config --global user.email "<email>"`. If the user plans to use GitHub, suggest the email address of their GitHub account.
 
 ### 1.4 Get the workshop files
 
@@ -102,15 +104,18 @@ Explain this in one sentence and **ASK** whether you may mark each agent folder 
 
 ### 3.2 Optional: GitHub backup
 
-**ASK** whether the user has a GitHub account, or wants one, to keep a private online backup of their agents. If not, set `GITHUB` to `no` and skip this step. Everything works without GitHub.
+**ASK** whether the user has a GitHub account, or wants one, to keep a private online backup of their agents. If not, set `GITHUB` to `no` and skip this step. Everything works without GitHub. If they want one but don't have an account yet, they make one at https://github.com/signup first; wait until they say it's done.
 
-1. Check `gh --version`. If it's missing, **ASK**, then install it:
-   - Windows: `winget install --id GitHub.cli -e --source winget --accept-package-agreements --accept-source-agreements`. T3 Code then needs a restart, as in step 1.2.
-   - macOS: `brew install gh`. Without Homebrew, the user installs the `.pkg` from https://cli.github.com.
-   - Linux: follow https://github.com/cli/cli#installation. The user runs the `sudo` commands themselves.
-2. Login is interactive, so the user does it in their own terminal. Windows: Start → type `PowerShell` → open it. macOS: Cmd+Space → `Terminal`. Linux: their terminal app. They run `gh auth login`, choose **GitHub.com**, **HTTPS**, **Yes** (authenticate Git), and **Login with a web browser**. Then they type the code shown into the browser. Wait until they say it's done, then check with `gh auth status`.
+A yes is permission to install and log in to GitHub's program `gh` (rule 4): don't ask again, just say what you're doing.
 
-Set `GITHUB` to `yes` if `gh auth status` succeeds, otherwise `no`. Each agent gets its own private repository in step 8.
+1. **Install `gh`** if `gh --version` fails. `GH` is the command you use from now on: `gh`, or its full path.
+   - Windows: `winget install --id GitHub.cli -e --source winget --accept-package-agreements --accept-source-agreements`. This thread doesn't see the new program yet, so use the full path `C:\Program Files\GitHub CLI\gh.exe` as `GH` (in PowerShell: `& "C:\Program Files\GitHub CLI\gh.exe"`).
+   - macOS with Homebrew (`brew --version` works): `brew install gh`.
+   - Otherwise (macOS without Homebrew, Linux, or Windows without winget): download the newest release archive for this OS and processor from https://github.com/cli/cli/releases/latest (`macOS_universal.zip`, `linux_amd64.tar.gz` / `linux_arm64.tar.gz`, `windows_amd64.zip`), unpack it into `<USER_HOME>/.local/gh`, and use the full path to its `bin/gh` (Windows: `bin\gh.exe`) as `GH`. This needs no password.
+2. **Log in.** Run `GH auth login --hostname github.com --git-protocol https --web` yourself. It doesn't need a terminal window: it prints a one-time code and the link https://github.com/login/device, and then waits until the user has logged in. Give it at least 10 minutes (a long timeout, or run it in the background and read its output). Show the user the code and the link, and ask them to open the link, enter the code, log in and click **Authorize**, and to tell you when it's done. Then run `GH auth setup-git` and check with `GH auth status`.
+   - UNVERIFIED on Windows. If your tool can't keep the command running, the user runs `gh auth login` in their own terminal instead (Windows: Start → `PowerShell`; macOS: Cmd+Space → `Terminal`; Linux: their terminal app), chooses **GitHub.com**, **HTTPS**, **Yes** and **Login with a web browser**, and enters the code shown.
+
+Set `GITHUB` to `yes` if `GH auth status` succeeds, otherwise `no`. Each agent gets its own private repository in step 8.
 
 ## Step 4: The agent manager
 
@@ -133,7 +138,7 @@ Check these and fix what you can:
 - Git works, and `user.name` and `user.email` are set.
 - `AGENTS_DIR` exists, is not a Git repository, and contains the shared `README.md` and `AGENTS.md`.
 - `WORKSHOP_DIR` contains `setup.md` and `templates/` (or you're reading the files from GitHub).
-- Codex users: `CODEX_TRUST` is set. GitHub, if chosen: `gh auth status` succeeds.
+- Codex users: `CODEX_TRUST` is set. GitHub, if chosen: `GH auth status` succeeds.
 - The agent manager: its folder is a Git repository with a commit, and it's a T3 project (or the user is adding it by hand).
 
 ### 4.3 Let the agent manager introduce itself
@@ -143,7 +148,7 @@ Skip this if the `agent-manager` folder already existed when you reached 4.1 (an
 - Dutch: title `Kennismaking`, message: `Hoi, ik ben <USER_NAME>. Stel jezelf eens voor: wat doe je, hoe is de map met mijn agents opgebouwd, en hoe voeg ik er later meer agents aan toe?`
 - English: title `Introduction`, message: `Hi, I'm <USER_NAME>. Please introduce yourself: what do you do, how is the folder with my agents organised, and how do I add more agents later?`
 
-Don't wait for that thread. If the tool isn't available, fails, or the project isn't in T3 Code yet, give the user that message instead: they right-click **Agent manager** in the sidebar → **New thread**, and paste it.
+Don't wait for that thread. If the tool isn't available, fails, or the project isn't in T3 Code yet, give the user that message instead: they click **New thread** (the pencil icon at the top of the sidebar) and choose **Agent manager**, and paste it.
 
 ### 4.4 Tell the user
 
@@ -263,7 +268,7 @@ The user designs their own agent. Help them pick something small and concrete th
    | `{{LANGUAGE}}` | `LANGUAGE` |
    | `{{SITE_URL}}` | `SITE_URL` (WordPress only) |
    | `{{EMAIL_PROVIDER}}` | `EMAIL_PROVIDER` (email only) |
-   | `{{CODEX_TRUST}}`, `{{GITHUB}}` | `CODEX_TRUST`, `GITHUB` (agent manager only) |
+   | `{{CODEX_TRUST}}`, `{{GITHUB}}` | `CODEX_TRUST`, and `GITHUB` plus the full path to `gh` if `GH` isn't just `gh` (agent manager only) |
    | `{{AGENT_TITLE}}`, `{{AGENT_PURPOSE}}`, `{{AGENT_TASKS}}`, `{{AGENT_TOOLS}}` | from step 6.4 (own agent only) |
    | `{{DATE}}` | today, `YYYY-MM-DD` |
 
@@ -359,8 +364,8 @@ Only if `GITHUB` is `yes`.
 
 1. First check that no password is in the agent's history: `git -C "<TARGET>" log -p -- .mcp.json .codex/config.toml` must not contain `Authorization`. If it does, don't push this agent, and tell the user to revoke that application password in WordPress.
 2. Then:
-   - **No `origin` yet** (`git -C "<TARGET>" remote get-url origin` fails): run `gh repo create agents-<folder> --private --source "<TARGET>" --remote origin --push`. If that name is taken, **ASK** for another one.
-   - **`origin` exists:** run `gh repo view <origin URL> --json nameWithOwner,visibility`. Push with `git -C "<TARGET>" push -u origin main` only if `visibility` is `PRIVATE`. Otherwise don't push, and tell the user which repository it points to.
+   - **No `origin` yet** (`git -C "<TARGET>" remote get-url origin` fails): run `GH repo create agents-<folder> --private --source "<TARGET>" --remote origin --push`. If that name is taken, **ASK** for another one.
+   - **`origin` exists:** run `GH repo view <origin URL> --json nameWithOwner,visibility`. Push with `git -C "<TARGET>" push -u origin main` only if `visibility` is `PRIVATE`. Otherwise don't push, and tell the user which repository it points to.
 
 ## Step 9: Add the agent to T3 Code
 
@@ -370,8 +375,8 @@ Each agent becomes its own T3 Code project, with the title from the table in ste
 
 1. Call `t3_project_list` (page through `nextCursor`). If a project's `workspaceRoot` already equals `TARGET`, don't create it again. If its title differs, offer to rename it with `t3_project_update`.
 2. Otherwise call `t3_project_create` with `title` and `workspaceRoot` = absolute `TARGET` path, in native form (Windows: `C:\Users\Sam\agents\wordpress-site`). Leave out `createWorkspaceRootIfMissing`.
-3. **If it fails with `capability_denied`:** only a thread in permission mode **Full access** (and **Build**, not Plan) may add projects. **ASK** the user to switch, in `LANGUAGE`, along these lines:
-   > Click the model name under the message box. At the bottom of that menu, **Permissions** shows the current mode. Choose **Full access** (the shield with a line through it). If a button under the message box says **Plan**, click it so it says **Build**. Then send me "done".
+3. **If it fails with `capability_denied`:** only a thread in permission mode **Full access** may add projects. **ASK** the user to switch, in `LANGUAGE`, along these lines:
+   > In the message box, click the button that shows the current permissions (for example *Auto*) and choose **Full access**. Then send me "done".
 
    Ask only this; don't offer the by-hand route in the same message. The change applies from their next message. Then try A again. If the user doesn't want to switch, go to C.
 
@@ -379,10 +384,10 @@ Each agent becomes its own T3 Code project, with the title from the table in ste
 
 **C. By hand.** Give the user these steps, with the exact folder path and title:
 
-1. In T3 Code's left sidebar, click **Add project** (the + button at the top) → **Local folder** → choose `<TARGET>` → confirm.
-2. The project is named after the folder. To rename it: right-click the project in the sidebar → **Project settings** → set the title.
+1. At the top of T3 Code's sidebar, click **Add project** (the folder icon with a +) → **Local folder** → paste the full path `<TARGET>` → **Add**.
+2. The project is named after the folder. To rename it: right-click the project name at the top of the window → **Project settings** → change **Name**, then press Tab.
 
-Then **ASK** them to tell you when the project is in the sidebar, or to say "later". Wait for the answer. If `t3_project_list` works, check that `TARGET` is there before you call it done. Otherwise it's ⚠️ in step 11.
+Then **ASK** them to tell you when the project is added, or to say "later". Wait for the answer. If `t3_project_list` works, check that `TARGET` is there before you call it done. Otherwise it's ⚠️ in step 11.
 
 ## Step 10: Icon (only if you can generate images)
 
@@ -416,7 +421,7 @@ Check each item below for this agent and fix what you can. Then **show the user 
 
 In the same message, in `LANGUAGE`:
 
-1. **How to use the agent:** in T3 Code's sidebar, right-click the agent's project → **New thread**, and type a question. Always start agent work in that agent's own project, not in this setup thread.
+1. **How to use the agent:** click **New thread** (the pencil icon at the top of the sidebar) and choose the agent's project, then type a question. Always start agent work in that agent's own project, not in this setup thread.
 2. A first prompt to try:
    - Workflow 1, email assistant: "Check first whether you can reach my mailbox. Then look at my unread emails from the past 3 days and suggest what I should do with each one."
    - Workflow 2, WordPress inside view: "Which 5 posts have I published most recently, and which categories do I use most?"
